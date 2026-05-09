@@ -63,7 +63,7 @@ export const COMMANDS = new Map([
       workspace: 'dev',
     },
   ],
-  ['H', { name: 'GitHub', url: 'https://github.com/', workspace: 'dev' }],
+  ['H', { name: 'SourceHut', url: 'https://git.sr.ht/', workspace: 'dev' }],
   ['I', { name: 'Pico', url: 'https://pico.sh', workspace: 'dev' }],
   ['N', { name: 'Neon', url: 'https://neon.tech', workspace: 'dev' }],
   ['S', { name: 'Server', url: 'http://192.168.1.139', workspace: 'dev' }],
