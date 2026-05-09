@@ -278,51 +278,44 @@ export class Commands extends HTMLElement {
 
   #calculateOptimalColumns(count, maxCols) {
     if (count <= 1) return 1;
-
-    const minCols = 2;
+    if (count <= 2) return 2;
+    
     const effectiveMax = Math.min(maxCols, count);
-
-    let bestCols = minCols;
-    let minEmpty = Infinity;
-
-    for (let c = minCols; c <= effectiveMax; c++) {
-      const rows = Math.ceil(count / c);
-      const empty = rows * c - count;
-
-      if (empty < minEmpty) {
-        minEmpty = empty;
-        bestCols = c;
-      } else if (empty === minEmpty) {
-        bestCols = c;
+    
+    // Find the largest column count that divides evenly into count
+    for (let c = effectiveMax; c >= 2; c--) {
+      if (count % c === 0) {
+        return c;
       }
     }
-
-    return bestCols;
+    
+    // If no even divisor found, use count (single row) or maxCols
+    return Math.min(count, maxCols);
   }
 
-  #generateGridCSS(cols) {
+  #generateGridCSS(cols, maxWidth) {
     return `
       .commands {
         grid-template-columns: repeat(${cols}, 1fr);
-        max-width: ${cols * 12}rem;
+        max-width: ${maxWidth};
       }
     `;
   }
 
   #updateGridStyles(count) {
-    const colsMobile = this.#calculateOptimalColumns(count, 3);
-    const colsTablet = this.#calculateOptimalColumns(count, 4);
-    const colsDesktop = this.#calculateOptimalColumns(count, 6);
+    const mobileCols = this.#calculateOptimalColumns(count, 2);
+    const tabletCols = this.#calculateOptimalColumns(count, 4);
+    const desktopCols = this.#calculateOptimalColumns(count, 5);
 
     this.#dynamicStyle.textContent = `
       @media (max-width: 599px) {
-        ${this.#generateGridCSS(colsMobile)}
+        ${this.#generateGridCSS(mobileCols, '28rem')}
       }
       @media (min-width: 600px) and (max-width: 899px) {
-        ${this.#generateGridCSS(colsTablet)}
+        ${this.#generateGridCSS(tabletCols, '56rem')}
       }
       @media (min-width: 900px) {
-        ${this.#generateGridCSS(colsDesktop)}
+        ${this.#generateGridCSS(desktopCols, '70rem')}
       }
     `;
   }
