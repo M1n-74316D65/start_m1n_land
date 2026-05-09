@@ -25,7 +25,8 @@ tasks:
       set +x
       eval "$(ssh-agent -s)"
       ssh-add ~/.ssh/id_rsa >/dev/null 2>&1
-      mkdir -p ~/.ssh && echo "pgs.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9mZWAJS8RCjMI6Fq7Y4Jr7Kwo3Wqa6guG6N2ptV+i" >> ~/.ssh/known_hosts
+      mkdir -p ~/.ssh
+      ssh-keyscan pgs.sh >> ~/.ssh/known_hosts 2>/dev/null
       rsync --delete -rv ./dist/ pgs.sh:/start-m1n-land
       set -x
 
