@@ -1,27 +1,32 @@
-image: alpine/edge
+image: alpine/latest
 
 packages:
   - nodejs
+  - npm
+  - rsync
+  - openssh-client-default
 
 environment:
   site: start.m1n.land
 
 secrets:
-  - 9842a2f8-3365-4326-a3c0-9f155df7ae10 # VERCEL_TOKEN
+  - 2d681c1b-dc07-4222-9d9a-599ec1f3dadc # SSH_DEPLOY_KEY
 
 tasks:
+  - build: |
+      cd $site
+      npm ci
+      npm run build
   - deploy: |
       cd $site
-      echo "Installing deployment dependencies..."
-      curl -fsSL https://bun.sh/install | bash
-      export BUN_INSTALL="$HOME/.bun"
-      export PATH="$BUN_INSTALL/bin:$PATH"
-      bun install -g vercel
+      set +x
+      eval "$(ssh-agent -s)"
+      ssh-add ~/.ssh/id_rsa >/dev/null 2>&1
+      mkdir -p ~/.ssh && echo "pgs.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9mZWAJS8RCjMI6Fq7Y4Jr7Kwo3Wqa6guG6N2ptV+i" >> ~/.ssh/known_hosts
+      rsync --delete -rv ./dist/ pgs.sh:/start-m1n-land
+      set -x
 
-      # Deploy to Vercel
-      set +x  # Disable command echoing for security
-      export VERCEL_TOKEN=$(cat ~/.VERCEL_TOKEN)
-      echo "Deploying to Vercel..."
-      vercel link -p $site -y --token $VERCEL_TOKEN
-      vercel deploy --prod --token $VERCEL_TOKEN >/dev/null 2>&1
-      echo "Deployment completed successfully"
+triggers:
+  - action: email
+    condition: failure
+    to: ~m1n/git.sr.ht
