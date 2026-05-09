@@ -15,8 +15,11 @@ secrets:
 tasks:
   - build: |
       cd $site
-      npm ci
-      npm run build
+      curl -fsSL https://bun.sh/install | bash
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
+      bun install
+      bun run build
   - deploy: |
       cd $site
       set +x
