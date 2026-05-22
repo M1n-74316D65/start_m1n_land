@@ -107,14 +107,14 @@ commandsTemplate.innerHTML = `
 
     .commands {
       display: grid;
-      gap: 1px;
+      gap: 2px;
       list-style: none;
       margin: 0 auto;
       padding: 0;
       width: 100%;
       background: var(--color-border);
       border: 1px solid var(--color-border);
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-lg);
       overflow: hidden;
       opacity: 0;
       transform: translateY(4px);
@@ -134,14 +134,14 @@ commandsTemplate.innerHTML = `
 
     .command {
       display: flex;
-      gap: var(--space-sm);
+      gap: var(--space-md);
       outline: 0;
-      padding: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
       position: relative;
       text-decoration: none;
-      min-height: 44px;
+      min-height: 48px;
       align-items: center;
-      background: var(--color-background);
+      background: var(--color-surface);
       transition: 
         background var(--duration-normal) var(--ease-spring),
         transform var(--duration-fast) var(--ease-spring),
@@ -150,7 +150,9 @@ commandsTemplate.innerHTML = `
 
     .command:hover {
       color: var(--color-text);
-      background: var(--color-focus);
+      background: var(--color-surface-elevated);
+      box-shadow: var(--shadow-card);
+      z-index: 1;
     }
 
     .command:focus-visible {
@@ -175,9 +177,10 @@ commandsTemplate.innerHTML = `
     }
 
     .command:hover .key {
-      background: var(--color-accent-glow);
+      background: var(--color-accent);
+      color: var(--color-background);
       border-color: var(--color-accent);
-      box-shadow: 0 0 12px var(--color-accent-glow);
+      box-shadow: 0 0 16px var(--color-accent-glow);
     }
 
     .command:focus-visible .key {
@@ -188,17 +191,17 @@ commandsTemplate.innerHTML = `
     }
 
     .key {
-      color: var(--color-accent);
+      color: var(--color-accent-dim);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1.7rem;
-      height: 1.7rem;
+      width: 1.8rem;
+      height: 1.8rem;
       font-weight: var(--font-weight-bold);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       letter-spacing: 0.04em;
-      background: transparent;
-      border: 1px solid var(--color-accent);
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-accent-dim);
       border-radius: var(--border-radius);
       flex-shrink: 0;
       transition: 
@@ -207,16 +210,17 @@ commandsTemplate.innerHTML = `
     }
 
     .name {
-      color: var(--color-text-subtle);
+      color: var(--color-text);
       transition: 
         color var(--duration-normal) var(--ease-spring),
         transform var(--duration-normal) var(--ease-spring);
-      letter-spacing: 0.03em;
-      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      font-size: 0.8rem;
       text-transform: uppercase;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-weight: var(--font-weight-normal);
     }
 
     .command:hover .name {

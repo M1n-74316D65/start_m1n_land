@@ -7,12 +7,13 @@ tabsTemplate.innerHTML = `
       display: flex;
       gap: 0;
       margin-bottom: var(--space-lg);
-      background: transparent;
+      background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-lg);
       overflow: hidden;
       position: relative;
       width: 100%;
+      box-shadow: var(--shadow-sm);
     }
 
     .tab {
