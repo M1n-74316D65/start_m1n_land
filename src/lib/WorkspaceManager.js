@@ -51,7 +51,7 @@ export class WorkspaceManager {
     }
 
     const orderedWorkspaces = Array.from(workspaceMap.values());
-    const order = ['personal', 'dev', 'work'];
+    const order = ['personal', 'dev'];
     orderedWorkspaces.sort((a, b) => {
       const indexA = order.indexOf(a.id);
       const indexB = order.indexOf(b.id);

@@ -28,8 +28,8 @@ export const COMMANDS = new Map([
   [
     'M',
     {
-      name: 'Raindrop',
-      url: 'https://app.raindrop.io/',
+      name: 'Minttr',
+      url: 'https://my.minttr.com/',
       workspace: 'personal',
     },
   ],
@@ -70,14 +70,5 @@ export const COMMANDS = new Map([
   [
     'V',
     { name: 'Vercel', url: 'https://vercel.com/dashboard', workspace: 'dev' },
-  ],
-  // Work (alphabetical by key)
-  [
-    'J',
-    { name: 'Raindrop', url: 'https://app.raindrop.io/', workspace: 'work' },
-  ],
-  [
-    'O',
-    { name: 'Outlook', url: 'https://outlook.office.com', workspace: 'work' },
   ],
 ]);
