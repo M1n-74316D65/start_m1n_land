@@ -1,90 +1,100 @@
 :root {
-  /* Spacing scale - semantic tokens */
+  /* Spacing scale */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 0.875rem;
   --space-lg: 1.25rem;
   --space-xl: 1.75rem;
   --space-2xl: 2.5rem;
-  --space: var(--space-md); /* Backward compatibility alias */
+  --space: var(--space-md);
+
+  /* Layout — tuned for 44rem panel (~704px at laptop/desktop) */
+  --layout-max: 44rem;
+  --moment-col-width: 9.5rem;
+  --zone-radius: 0.625rem;
+  --key-radius: 0.25rem;
 
   /* Border radius */
-  --border-radius: 0.25rem;
+  --border-radius: var(--key-radius);
   --border-radius-sm: 0.125rem;
-  --border-radius-lg: 0.375rem;
+  --border-radius-lg: var(--zone-radius);
   --border-radius-full: 999px;
 
   /* Colors */
   --color-background: #080909;
-  --color-surface: #0f1010;
-  --color-surface-elevated: #141616;
-  --color-text-subtle: #848b8b;
-  --color-text-muted: #5e6666;
-  --color-text: #e2e4e2;
-  --color-focus: #1c1f1f;
-  --color-border: #1c1f1f;
+  --color-surface: #0d0e0e;
+  --color-surface-elevated: #121414;
+  --color-text-subtle: #7a8282;
+  --color-text-muted: #565e5e;
+  --color-text: #e0e2e0;
+  --color-focus: #181a1a;
+  --color-border: #1a1d1d;
+  --color-border-subtle: #141616;
   --color-accent: #7cba5f;
   --color-accent-hover: #8fcc6f;
   --color-accent-dim: #5a9a3d;
-  --color-accent-glow: rgba(124, 186, 95, 0.12);
-  --color-accent-subtle: rgba(124, 186, 95, 0.08);
-  --color-scanline: rgba(255, 255, 255, 0.018);
+  --color-accent-glow: rgba(124, 186, 95, 0.14);
+  --color-accent-subtle: rgba(124, 186, 95, 0.07);
+  --color-vignette: rgba(124, 186, 95, 0.035);
+
+  /* PWA / browser chrome */
+  --pwa-background-color: #080909;
+  --pwa-theme-color: #080909;
 
   /* Typography */
-  --font-family:
+  --font-family-display:
+    'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-family-mono:
     'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas,
     'Liberation Mono', monospace;
-  --font-size: clamp(14px, 1.2vw, 16px);
+  --font-family: var(--font-family-mono);
+  --font-size: 15px;
   --font-weight-bold: 500;
   --font-weight-normal: 400;
-  --letter-spacing: 0.015em;
+  --letter-spacing: 0.01em;
 
-  /* Animation & transitions */
-  --duration-fast: 100ms;
-  --duration-normal: 180ms;
-  --duration-slow: 250ms;
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  /* Legacy aliases */
+  /* Animation */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
   --transition-speed: var(--duration-normal);
   --transition-speed-fast: var(--duration-fast);
-  --transition-easing: var(--ease-spring);
+  --transition-easing: var(--ease-out);
   --transition-bounce: var(--ease-spring);
 
   /* Borders & shadows */
   --grid-border: 1px solid var(--color-border);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 24px var(--color-accent-glow);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    /* Colors */
-    --color-background: #f0f1f0;
-    --color-surface: #e8e9e8;
+    --color-background: #eceeed;
+    --color-surface: #f5f6f5;
     --color-surface-elevated: #ffffff;
-    --color-text-subtle: #5a6060;
-    --color-text-muted: #6b7272;
-    --color-text: #181a18;
-    --color-focus: #d4d6d4;
-    --color-border: #d4d6d4;
+    --color-text-subtle: #5c6363;
+    --color-text-muted: #727979;
+    --color-text: #161816;
+    --color-focus: #e4e6e4;
+    --color-border: #d0d3d0;
+    --color-border-subtle: #e0e2e0;
     --color-accent: #5b943b;
     --color-accent-hover: #6ca645;
     --color-accent-dim: #487a2e;
-    --color-accent-glow: rgba(91, 148, 59, 0.1);
+    --color-accent-glow: rgba(91, 148, 59, 0.12);
     --color-accent-subtle: rgba(91, 148, 59, 0.06);
-    --color-scanline: rgba(0, 0, 0, 0.02);
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.18);
-    --shadow-glow: 0 0 24px var(--color-accent-glow);
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --color-vignette: rgba(91, 148, 59, 0.04);
+
+    --pwa-background-color: #eceeed;
+    --pwa-theme-color: #eceeed;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-panel: 0 12px 36px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.05);
   }
 }

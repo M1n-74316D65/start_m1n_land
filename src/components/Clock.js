@@ -1,40 +1,49 @@
 const clockTemplate = document.createElement('template');
 clockTemplate.innerHTML = `
   <style>
+    :host {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+    }
+
     .clock-container {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-      text-align: center;
+      align-items: flex-start;
+      gap: 0.35rem;
+      text-align: left;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .greeting {
-      color: var(--color-text-subtle);
-      font-size: 0.72rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-family-mono);
+      font-size: 0.68rem;
       font-weight: var(--font-weight-normal);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
     .time {
       color: var(--color-text);
-      font-size: clamp(2.5rem, 7vw, 4rem);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.02em;
+      font-family: var(--font-family-display);
+      font-size: clamp(1.65rem, 4.5vw, 2.25rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
       line-height: 1;
       font-variant-numeric: tabular-nums;
+      max-width: 100%;
     }
 
     .date {
       color: var(--color-text-subtle);
-      font-size: 0.72rem;
+      font-family: var(--font-family-mono);
+      font-size: 0.68rem;
       font-weight: var(--font-weight-normal);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-top: var(--space-xs);
     }
-
   </style>
   <div class="clock-container">
     <span class="greeting"></span>
@@ -74,8 +83,8 @@ export class Clock extends HTMLElement {
     const timeStr = `${hours}:${minutes}`;
     const greeting = this.#getGreeting(hours);
     const dateStr = now.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
+      weekday: 'short',
+      month: 'short',
       day: 'numeric',
     });
 

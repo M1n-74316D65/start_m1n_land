@@ -5,246 +5,151 @@ import { CONFIG } from '../config.js';
 const commandsTemplate = document.createElement('template');
 commandsTemplate.innerHTML = `
   <style>
+    :host {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+
     .commands-shell {
       display: flex;
       flex-direction: column;
-      gap: var(--space-md);
       width: 100%;
+      min-width: 0;
     }
 
-    .quick-access {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
+    .commands {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
       width: 100%;
+      background: var(--color-border-subtle);
+      border-radius: var(--key-radius);
+      overflow: hidden;
       opacity: 0;
-      transform: translateY(-4px);
-      animation: fadeInUp var(--duration-normal) var(--ease-spring) forwards;
+      transform: translateY(3px);
+      animation: gridFadeIn var(--duration-slow) var(--ease-out) forwards;
+      transition: opacity var(--duration-normal) var(--ease-out);
     }
 
-    @keyframes fadeInUp {
+    .commands.switching {
+      opacity: 0.6;
+    }
+
+    @keyframes gridFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
-    .quick-access-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-sm);
-      color: var(--color-text-subtle);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0 var(--space-xs);
-    }
-
-    .quick-access-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .quick-access-item {
-      margin: 0;
-    }
-
-    .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-xs);
-      padding: var(--space-xs) var(--space-sm);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-full);
-      background: color-mix(in srgb, var(--color-surface-elevated) 70%, transparent);
-      color: var(--color-text-subtle);
-      text-decoration: none;
-      transition:
-        border-color var(--duration-normal) var(--ease-spring),
-        color var(--duration-normal) var(--ease-spring),
-        background var(--duration-normal) var(--ease-spring),
-        transform var(--duration-fast) var(--ease-spring);
-    }
-
-    .quick-link:hover,
-    .quick-link:focus-visible {
-      color: var(--color-text);
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .quick-link:focus-visible {
-      box-shadow: 0 0 0 1px var(--color-accent-glow);
-    }
-
-    .quick-key {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.3rem;
-      height: 1.3rem;
-      border-radius: var(--border-radius-full);
-      border: 1px solid var(--color-accent);
-      color: var(--color-accent);
-      font-size: 0.62rem;
-      font-weight: var(--font-weight-bold);
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
-    .quick-name {
-      font-size: 0.68rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .commands {
-      display: grid;
-      gap: 2px;
-      list-style: none;
-      margin: 0 auto;
-      padding: 0;
-      width: 100%;
-      background: var(--color-border);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-lg);
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(4px);
-      animation: gridFadeIn var(--duration-slow) var(--ease-spring) forwards;
-    }
-
-    @keyframes gridFadeIn {
-      from { 
-        opacity: 0; 
-        transform: translateY(4px); 
-      }
-      to { 
-        opacity: 1; 
-        transform: translateY(0); 
-      }
-    }
-
     .command {
       display: flex;
-      gap: var(--space-md);
+      gap: var(--space-sm);
       outline: 0;
-      padding: var(--space-md) var(--space-lg);
+      padding: 0.5rem 0.55rem;
       position: relative;
       text-decoration: none;
-      min-height: 48px;
+      min-height: 2.35rem;
+      min-width: 0;
       align-items: center;
-      background: var(--color-surface);
-      transition: 
-        background var(--duration-normal) var(--ease-spring),
-        transform var(--duration-fast) var(--ease-spring),
-        box-shadow var(--duration-normal) var(--ease-spring);
+      background: var(--color-surface-elevated);
+      border: none;
+      border-radius: 0;
+      transition: background var(--duration-normal) var(--ease-out);
+    }
+
+    .command-wide {
+      grid-column: span 2;
     }
 
     .command:hover {
       color: var(--color-text);
-      background: var(--color-surface-elevated);
-      box-shadow: var(--shadow-card);
+      background: var(--color-focus);
       z-index: 1;
     }
 
     .command:focus-visible {
       outline: none;
       background: var(--color-accent-subtle);
+      box-shadow: inset 0 0 0 1px var(--color-accent);
       z-index: 1;
     }
 
-    .command:focus-visible::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 1px solid var(--color-accent);
-      border-radius: var(--border-radius);
-      pointer-events: none;
-    }
-
     .command:active {
-      transform: scale(0.98);
-      transition: transform var(--duration-fast) var(--ease-spring);
       background: var(--color-accent-subtle);
     }
 
-    .command:hover .key {
-      background: var(--color-accent);
-      color: var(--color-background);
-      border-color: var(--color-accent);
-      box-shadow: 0 0 16px var(--color-accent-glow);
-    }
-
+    .command:hover .key,
     .command:focus-visible .key {
       background: var(--color-accent);
       color: var(--color-background);
       border-color: var(--color-accent);
-      box-shadow: 0 0 16px var(--color-accent-glow);
     }
 
     .key {
-      color: var(--color-accent-dim);
+      color: var(--color-accent);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1.8rem;
-      height: 1.8rem;
+      width: 1.45rem;
+      height: 1.45rem;
       font-weight: var(--font-weight-bold);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
+      font-size: 0.65rem;
+      letter-spacing: 0;
       background: var(--color-accent-subtle);
-      border: 1px solid var(--color-accent-dim);
-      border-radius: var(--border-radius);
+      border: none;
+      border-radius: var(--key-radius);
       flex-shrink: 0;
-      transition: 
-        all var(--duration-normal) var(--ease-spring),
-        box-shadow var(--duration-normal) var(--ease-spring);
+      transition:
+        background var(--duration-normal) var(--ease-out),
+        color var(--duration-normal) var(--ease-out);
     }
 
     .name {
       color: var(--color-text);
-      transition: 
-        color var(--duration-normal) var(--ease-spring),
-        transform var(--duration-normal) var(--ease-spring);
-      letter-spacing: 0.04em;
-      font-size: 0.8rem;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      font-size: 0.72rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: 0;
+      flex: 1;
       font-weight: var(--font-weight-normal);
+      font-family: var(--font-family-mono);
     }
 
-    .command:hover .name {
-      color: var(--color-text);
-      transform: translateX(2px);
+    @media (max-width: 599px) {
+      .command-wide {
+        grid-column: span 1;
+      }
+
+      .commands {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .command:focus-visible .name {
-      color: var(--color-text);
-    }
+    @media (prefers-reduced-motion: reduce) {
+      .commands {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
 
-    @media (min-width: 900px) {
-      .command {
-        padding: var(--space-md) var(--space-lg);
+      .commands.switching {
+        opacity: 1;
       }
     }
   </style>
   <div class="commands-shell">
-    <section class="quick-access" hidden>
-      <div class="quick-access-header">
-        <span class="quick-access-title">Recent</span>
-      </div>
-      <ul class="quick-access-list"></ul>
-    </section>
     <nav aria-label="Workspace shortcuts">
       <menu class="commands"></menu>
     </nav>
@@ -263,14 +168,11 @@ commandTemplate.innerHTML = `
 
 export class Commands extends HTMLElement {
   #activeWorkspaceId;
-  #dynamicStyle;
   #boundWorkspaceChange;
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this.#dynamicStyle = document.createElement('style');
-    this.shadowRoot.appendChild(this.#dynamicStyle);
     this.shadowRoot.appendChild(commandsTemplate.content.cloneNode(true));
     this.#activeWorkspaceId = workspaceManager.activeWorkspaceId;
     this.#initializeEventListeners();
@@ -280,48 +182,15 @@ export class Commands extends HTMLElement {
     this.render();
   }
 
-  #calculateOptimalColumns(count, maxCols) {
-    if (count <= 1) return 1;
-    if (count <= 2) return 2;
-    
-    const effectiveMax = Math.min(maxCols, count);
-    
-    // Find the largest column count that divides evenly into count
-    for (let c = effectiveMax; c >= 2; c--) {
-      if (count % c === 0) {
-        return c;
-      }
-    }
-    
-    // If no even divisor found, use count (single row) or maxCols
-    return Math.min(count, maxCols);
-  }
-
-  #generateGridCSS(cols, maxWidth) {
-    return `
-      .commands {
-        grid-template-columns: repeat(${cols}, 1fr);
-        max-width: ${maxWidth};
-      }
-    `;
-  }
-
-  #updateGridStyles(count) {
-    const mobileCols = this.#calculateOptimalColumns(count, 2);
-    const tabletCols = this.#calculateOptimalColumns(count, 4);
-    const desktopCols = this.#calculateOptimalColumns(count, 5);
-
-    this.#dynamicStyle.textContent = `
-      @media (max-width: 599px) {
-        ${this.#generateGridCSS(mobileCols, '28rem')}
-      }
-      @media (min-width: 600px) and (max-width: 899px) {
-        ${this.#generateGridCSS(tabletCols, '56rem')}
-      }
-      @media (min-width: 900px) {
-        ${this.#generateGridCSS(desktopCols, '70rem')}
-      }
-    `;
+  #getWideCommandKeys() {
+    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
+      this.#activeWorkspaceId
+    );
+    const commandKeys = Array.from(workspaceCommands.keys());
+    const recent = UsageTracker.getRecentCommands(commandKeys, 4);
+    const frequent = UsageTracker.getFrequentCommands(commandKeys, 4);
+    const items = recent.length > 0 ? recent : frequent;
+    return new Set(items.slice(0, 2).map(({ commandKey }) => commandKey));
   }
 
   #initializeEventListeners() {
@@ -340,101 +209,44 @@ export class Commands extends HTMLElement {
 
   render() {
     const commandsContainer = this.shadowRoot.querySelector('.commands');
-    const quickAccess = this.shadowRoot.querySelector('.quick-access');
     const fragment = this.createCommandsFragment();
     const count = fragment.children.length;
 
     if (count === 0) {
       commandsContainer.style.display = 'none';
-      quickAccess.style.display = 'none';
       return;
     }
 
-    this.#renderQuickAccess();
-    this.#updateGridStyles(count);
     commandsContainer.appendChild(fragment);
   }
 
   rerender() {
     const commandsContainer = this.shadowRoot.querySelector('.commands');
-    const quickAccess = this.shadowRoot.querySelector('.quick-access');
     if (!commandsContainer) return;
 
-    const fragment = this.createCommandsFragment();
-    const count = fragment.children.length;
+    commandsContainer.classList.add('switching');
 
-    if (count === 0) {
-      commandsContainer.style.display = 'none';
-      quickAccess.style.display = 'none';
-      return;
-    }
+    requestAnimationFrame(() => {
+      const fragment = this.createCommandsFragment();
+      const count = fragment.children.length;
 
-    this.#renderQuickAccess();
-    commandsContainer.replaceChildren(fragment);
-    this.#updateGridStyles(count);
-    commandsContainer.style.display = 'grid';
+      if (count === 0) {
+        commandsContainer.style.display = 'none';
+        commandsContainer.classList.remove('switching');
+        return;
+      }
 
-    // Retrigger animations
-    commandsContainer.style.animation = 'none';
-    quickAccess.style.animation = 'none';
-    commandsContainer.offsetHeight; /* trigger reflow */
-    commandsContainer.style.animation = '';
-    quickAccess.style.animation = '';
-  }
+      commandsContainer.replaceChildren(fragment);
+      commandsContainer.style.display = 'grid';
 
-  #renderQuickAccess() {
-    const quickAccess = this.shadowRoot.querySelector('.quick-access');
-    const quickAccessTitle = this.shadowRoot.querySelector(
-      '.quick-access-title'
-    );
-    const quickAccessList = this.shadowRoot.querySelector('.quick-access-list');
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
-    const commandKeys = Array.from(workspaceCommands.keys());
+      commandsContainer.style.animation = 'none';
+      commandsContainer.offsetHeight;
+      commandsContainer.style.animation = '';
 
-    const recent = UsageTracker.getRecentCommands(commandKeys, 4);
-    const frequent = UsageTracker.getFrequentCommands(commandKeys, 4);
-    const items = recent.length > 0 ? recent : frequent;
-
-    quickAccessList.replaceChildren();
-
-    if (items.length === 0) {
-      quickAccess.style.display = 'none';
-      return;
-    }
-
-    quickAccess.style.display = 'flex';
-    quickAccessTitle.textContent = recent.length > 0 ? 'Recent' : 'Popular';
-
-    const fragment = document.createDocumentFragment();
-    items.forEach(({ commandKey }) => {
-      const command = workspaceCommands.get(commandKey);
-      if (!command) return;
-
-      const item = document.createElement('li');
-      item.className = 'quick-access-item';
-
-      const link = document.createElement('a');
-      link.className = 'quick-link';
-      link.href = command.url;
-      link.rel = 'noopener noreferrer';
-      link.innerHTML = `
-        <span class="quick-key">${commandKey}</span>
-        <span class="quick-name">${command.name}</span>
-      `;
-
-      if (CONFIG.openLinksInNewTab) link.target = '_blank';
-      link.addEventListener('click', () => {
-        UsageTracker.recordUsage(commandKey);
+      requestAnimationFrame(() => {
+        commandsContainer.classList.remove('switching');
       });
-
-      item.appendChild(link);
-      fragment.appendChild(item);
     });
-
-    quickAccessList.appendChild(fragment);
-    quickAccess.hidden = false;
   }
 
   createCommandsFragment() {
@@ -442,19 +254,23 @@ export class Commands extends HTMLElement {
     const workspaceCommands = workspaceManager.getCommandsForWorkspace(
       this.#activeWorkspaceId
     );
+    const wideKeys = this.#getWideCommandKeys();
 
     for (const [key, { name, url }] of workspaceCommands.entries()) {
       if (!name || !url) continue;
-      const commandClone = this.createCommandElement(key, name, url);
+      const commandClone = this.createCommandElement(key, name, url, wideKeys);
       fragment.appendChild(commandClone);
     }
     return fragment;
   }
 
-  createCommandElement(key, name, url) {
+  createCommandElement(key, name, url, wideKeys) {
     const clone = commandTemplate.content.cloneNode(true);
     const command = clone.querySelector('.command');
     command.href = url;
+    if (wideKeys.has(key)) {
+      command.classList.add('command-wide');
+    }
     if (CONFIG.openLinksInNewTab) command.target = '_blank';
     command.addEventListener('click', () => {
       UsageTracker.recordUsage(key);

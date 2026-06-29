@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="M1n">
+  <rect width="512" height="512" rx="96" fill="#0d0e0e"/>
+  <rect
+    x="32"
+    y="32"
+    width="448"
+    height="448"
+    rx="80"
+    fill="none"
+    stroke="#1a1d1d"
+    stroke-width="6"
+  />
+  <line
+    x1="188"
+    y1="368"
+    x2="324"
+    y2="144"
+    stroke="#7cba5f"
+    stroke-width="52"
+    stroke-linecap="round"
+  />
+</svg>

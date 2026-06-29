@@ -5,6 +5,13 @@ import { CONFIG } from '../config.js';
 const searchTemplate = document.createElement('template');
 searchTemplate.innerHTML = `
   <style>
+    :host {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+    }
+
     input,
     button {
       appearance: none;
@@ -12,6 +19,7 @@ searchTemplate.innerHTML = `
       border: 0;
       display: block;
       outline: 0;
+      font-family: inherit;
     }
 
     .dialog {
@@ -23,22 +31,22 @@ searchTemplate.innerHTML = `
       height: 100%;
       justify-content: center;
       left: 0;
-      padding: 0;
+      padding: var(--space-md);
       top: 0;
       width: 100%;
       opacity: 0;
-      transform: scale(0.96);
-      transition: 
-        opacity var(--duration-slow) var(--ease-spring),
-        transform var(--duration-slow) var(--ease-spring);
+      transform: translateY(8px);
+      transition:
+        opacity var(--duration-slow) var(--ease-out),
+        transform var(--duration-slow) var(--ease-out);
     }
 
     .dialog::backdrop {
-      background: color-mix(in srgb, var(--color-background) 80%, transparent);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: color-mix(in srgb, var(--color-background) 72%, transparent);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       opacity: 0;
-      transition: opacity var(--duration-normal) var(--ease-spring);
+      transition: opacity var(--duration-normal) var(--ease-out);
     }
 
     .dialog[open]::backdrop {
@@ -48,87 +56,131 @@ searchTemplate.innerHTML = `
     .dialog[open] {
       display: flex;
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     @media (prefers-reduced-motion: reduce) {
+      .dialog,
       .dialog[open] {
-        animation: none;
-        opacity: 1;
+        transform: none;
       }
+
       .suggestion {
         animation: none;
         opacity: 1;
-        transform: none;
       }
     }
 
     .form {
       width: 100%;
-      max-width: 34rem;
+      max-width: var(--layout-max);
+      margin: 0;
     }
 
-    .input-wrapper {
-      position: relative;
+    .search-panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--zone-radius);
+      box-shadow: var(--shadow-panel);
+      overflow: hidden;
+    }
+
+    .search-panel-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      justify-content: space-between;
       gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .search-panel-label {
+      color: var(--color-text-subtle);
+      font-family: var(--font-family-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .search-panel-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--color-text-muted);
+      font-family: var(--font-family-mono);
+      font-size: 0.62rem;
+    }
+
+    .search-panel-hint kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.2rem;
+      padding: 0.05rem 0.3rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-sm);
+      background: var(--color-focus);
+      color: var(--color-text-subtle);
+      font-family: inherit;
+      font-size: 0.58rem;
+      line-height: 1.3;
     }
 
     .input-container {
       position: relative;
-      width: 100%;
+      padding: var(--space-md) var(--space-lg);
     }
 
     .input {
       color: var(--color-text);
-      font-family: var(--font-family);
-      font-size: clamp(1.25rem, 3.2vw, 1.6rem);
+      font-family: var(--font-family-mono);
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
       font-weight: var(--font-weight-normal);
-      padding: var(--space-sm) var(--space-md);
-      text-align: center;
+      padding: var(--space-sm) 2rem var(--space-sm) var(--space-md);
+      text-align: left;
       width: 100%;
-      letter-spacing: var(--letter-spacing);
-      background: var(--color-surface-elevated);
+      box-sizing: border-box;
+      letter-spacing: 0.01em;
+      background: var(--color-focus);
       border: none;
-      border-radius: var(--border-radius);
-      box-shadow: inset 0 0 0 1px var(--color-border);
-      transition: 
-        box-shadow var(--duration-normal) var(--ease-spring);
+      border-radius: var(--key-radius);
+      box-shadow: inset 0 0 0 1px var(--color-border-subtle);
+      transition:
+        box-shadow var(--duration-normal) var(--ease-out),
+        background var(--duration-normal) var(--ease-out);
     }
 
     .input:focus {
-      box-shadow: inset 0 0 0 1px var(--color-accent), 0 0 0 2px var(--color-accent-glow);
+      background: var(--color-surface-elevated);
+      box-shadow: inset 0 0 0 1px var(--color-accent);
       outline: none;
     }
 
     .input::placeholder {
       color: var(--color-text-muted);
-      opacity: 0.7;
     }
 
     .clear-btn {
       position: absolute;
-      right: var(--space-sm);
+      right: calc(var(--space-lg) + var(--space-sm));
       top: 50%;
       transform: translateY(-50%);
-      width: 1.2em;
-      height: 1.2em;
+      width: 1.35rem;
+      height: 1.35rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: var(--border-radius-sm);
+      border-radius: var(--key-radius);
       color: var(--color-text-muted);
       background: transparent;
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      transition: 
-        opacity var(--duration-fast) var(--ease-spring),
-        background var(--duration-fast) var(--ease-spring),
-        color var(--duration-fast) var(--ease-spring);
+      transition:
+        opacity var(--duration-fast) var(--ease-out),
+        background var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out);
     }
 
     .clear-btn:visible {
@@ -147,18 +199,18 @@ searchTemplate.innerHTML = `
 
     .spinner {
       position: absolute;
-      right: var(--space-sm);
+      right: calc(var(--space-lg) + var(--space-sm));
       top: 50%;
       transform: translateY(-50%);
-      width: 1em;
-      height: 1em;
-      border: 2px solid transparent;
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid var(--color-border-subtle);
       border-top-color: var(--color-accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       opacity: 0;
       pointer-events: none;
-      transition: opacity var(--duration-fast) var(--ease-spring);
+      transition: opacity var(--duration-fast) var(--ease-out);
     }
 
     .spinner:visible {
@@ -169,117 +221,98 @@ searchTemplate.innerHTML = `
       to { transform: translateY(-50%) rotate(360deg); }
     }
 
-    .suggestions {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: center;
-      list-style: none;
-      margin: var(--space-md) 0 0;
-      overflow: hidden;
-      padding: 0;
-      gap: var(--space-xs);
-      min-height: 2.4em;
-      max-width: 100%;
+    .suggestions-wrapper {
+      border-top: 1px solid var(--color-border-subtle);
+      min-height: 0;
     }
 
-    .suggestions-wrapper {
-      width: 100%;
-      max-width: 34rem;
+    .suggestions-wrapper:has(.suggestion) {
+      min-height: 2.5rem;
+    }
+
+    .suggestions {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1px;
+      background: var(--color-border-subtle);
     }
 
     .suggestion {
-      color: var(--color-text-muted);
+      color: var(--color-text-subtle);
       cursor: pointer;
-      font-size: 0.72rem;
-      padding: var(--space-sm) var(--space-md);
-      position: relative;
-      transition: 
-        all var(--duration-normal) var(--ease-spring),
-        transform var(--duration-fast) var(--ease-spring);
+      font-family: var(--font-family-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem var(--space-lg);
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+      transition: background var(--duration-normal) var(--ease-out);
       white-space: nowrap;
-      z-index: 1;
-      border-radius: var(--border-radius);
+      overflow: hidden;
+      text-overflow: ellipsis;
       outline: 0;
       background: var(--color-surface-elevated);
-      border: 1px solid var(--color-border);
-      letter-spacing: 0.06em;
-      transform: translateY(-4px);
-      animation: suggestionIn var(--duration-normal) var(--ease-spring) forwards;
-      min-width: fit-content;
-      min-height: 2.2em;
+      border: none;
+      border-radius: 0;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      animation: suggestionIn var(--duration-normal) var(--ease-out) forwards;
       touch-action: manipulation;
     }
 
-    .suggestion:nth-child(1) { animation-delay: 0.02s; }
-    .suggestion:nth-child(2) { animation-delay: 0.04s; }
-    .suggestion:nth-child(3) { animation-delay: 0.06s; }
-    .suggestion:nth-child(4) { animation-delay: 0.08s; }
+    .suggestion:nth-child(1) { animation-delay: 0.03s; }
+    .suggestion:nth-child(2) { animation-delay: 0.06s; }
+    .suggestion:nth-child(3) { animation-delay: 0.09s; }
+    .suggestion:nth-child(4) { animation-delay: 0.12s; }
 
     @keyframes suggestionIn {
-      to {
-        transform: translateY(0);
-      }
+      to { opacity: 1; }
     }
 
     .suggestion:focus-visible,
     .suggestion:hover {
       color: var(--color-text);
-      border-color: var(--color-accent);
       background: var(--color-focus);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px var(--color-accent-glow);
     }
 
     .suggestion:focus-visible {
+      box-shadow: inset 0 0 0 1px var(--color-accent);
       outline: none;
     }
 
     .suggestion:active {
-      transform: translateY(0) scale(0.98);
-      transition: transform var(--duration-fast) var(--ease-spring);
+      background: var(--color-accent-subtle);
     }
 
     .match {
       color: var(--color-accent);
-      transition: color var(--duration-normal) var(--ease-spring);
       font-weight: var(--font-weight-bold);
     }
-
-    .suggestion:focus-visible .match,
-    .suggestion:hover .match {
-      color: var(--color-accent);
-    }
-
-    @media (min-width: 600px) {
-      .suggestions {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .suggestion {
-        font-size: 0.68rem;
-      }
-    }
   </style>
-    <dialog class="dialog">
+  <dialog class="dialog">
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
-      <div class="input-wrapper">
+      <div class="search-panel">
+        <div class="search-panel-header">
+          <span class="search-panel-label">Search</span>
+          <span class="search-panel-hint"><kbd>esc</kbd> close</span>
+        </div>
         <div class="input-container">
           <input
             class="input"
             aria-label="Search"
             title="search"
             type="text"
-            placeholder="Type command or search"
+            placeholder="Command, URL, or query"
           />
           <button type="button" class="clear-btn" aria-label="Clear">×</button>
           <div class="spinner" aria-hidden="true"></div>
         </div>
-      </div>
-      <div class="suggestions-wrapper">
-        <menu class="suggestions"></menu>
+        <div class="suggestions-wrapper">
+          <menu class="suggestions"></menu>
+        </div>
       </div>
     </form>
   </dialog>
@@ -305,6 +338,9 @@ export class Search extends HTMLElement {
   #activeWorkspaceId;
   #previousFocus;
   #isLoading = false;
+  #affordance;
+  #affordanceHost;
+  #boundAffordanceClick;
 
   constructor() {
     super();
@@ -320,8 +356,43 @@ export class Search extends HTMLElement {
     this.#initializeEventListeners();
   }
 
+  connectedCallback() {
+    this.#mountAffordance();
+  }
+
   disconnectedCallback() {
     this.#removeEventListeners();
+    this.#unmountAffordance();
+  }
+
+  #mountAffordance() {
+    this.#affordanceHost = document.getElementById('search-affordance');
+    if (!this.#affordanceHost || this.#affordance) return;
+
+    this.#affordance = document.createElement('button');
+    this.#affordance.type = 'button';
+    this.#affordance.className = 'search-affordance';
+    this.#affordance.setAttribute('aria-label', 'Open search');
+    this.#affordance.innerHTML = `
+      <span class="search-affordance-label">Search or go to URL</span>
+      <span class="search-affordance-hint"><kbd>/</kbd></span>
+    `;
+
+    this.#boundAffordanceClick = () => this.#open('');
+    this.#affordance.addEventListener('click', this.#boundAffordanceClick);
+    this.#affordanceHost.appendChild(this.#affordance);
+  }
+
+  #unmountAffordance() {
+    if (this.#affordance && this.#boundAffordanceClick) {
+      this.#affordance.removeEventListener('click', this.#boundAffordanceClick);
+    }
+    if (this.#affordanceHost) {
+      this.#affordanceHost.replaceChildren();
+    }
+    this.#affordance = null;
+    this.#affordanceHost = null;
+    this.#boundAffordanceClick = null;
   }
 
   #boundSubmit = this.#onSubmit.bind(this);
@@ -502,10 +573,12 @@ export class Search extends HTMLElement {
     this.#setLoading(false);
     this.#input.blur();
     this.#dialog.style.opacity = '0';
+    this.#dialog.style.transform = 'translateY(6px)';
 
     setTimeout(() => {
       this.#dialog.close();
       this.#dialog.style.opacity = '';
+      this.#dialog.style.transform = '';
       this.#suggestions.replaceChildren();
       if (
         this.#previousFocus &&
@@ -564,7 +637,7 @@ export class Search extends HTMLElement {
 
   async #onInput() {
     this.#updateClearBtn();
-    
+
     const workspaceCommands = workspaceManager.getCommandsForWorkspace(
       this.#activeWorkspaceId
     );

@@ -1,99 +1,74 @@
+import { PWA_TOKENS } from './src/pwa-tokens.js';
+
+const { dark } = PWA_TOKENS.colors;
+
 export default {
   registerType: 'autoUpdate',
-  includeAssets: ['favicon.ico', 'images/**/*.png'],
+  includeAssets: [
+    'favicon.ico',
+    'icon.svg',
+    'images/favicon-32.png',
+    'images/favicon-128.png',
+    'images/favicon-192.png',
+    'images/favicon-512.png',
+  ],
   manifest: {
     id: '/',
-    name: 'M1n Startpage',
-    short_name: 'M1n',
-    description: 'Minimal browser homepage for power users',
-    version: '2.0.0',
+    name: PWA_TOKENS.name,
+    short_name: PWA_TOKENS.shortName,
+    description: PWA_TOKENS.description,
+    version: PWA_TOKENS.version,
     start_url: '.',
     scope: '.',
     display: 'standalone',
     display_override: ['window-controls-overlay', 'standalone', 'browser'],
     orientation: 'any',
-    background_color: '#0c0d0d',
-    theme_color: '#0c0d0d',
+    background_color: dark.background,
+    theme_color: dark.theme,
     categories: ['productivity', 'utilities'],
     launch_handler: {
-      client_mode: ['navigate-existing', 'auto']
+      client_mode: ['navigate-existing', 'auto'],
     },
     icons: [
       {
-        src: '/favicon.ico',
-        sizes: '16x16 32x32',
-        type: 'image/x-icon'
+        src: '/images/favicon-32.png',
+        sizes: '32x32',
+        type: 'image/png',
       },
       {
-        src: '/images/favicon-7.png',
+        src: '/images/favicon-128.png',
         sizes: '128x128',
         type: 'image/png',
-        purpose: 'any'
+        purpose: 'any',
       },
       {
-        src: '/images/favicon-8.png',
+        src: '/images/favicon-192.png',
         sizes: '192x192',
         type: 'image/png',
-        purpose: 'any'
+        purpose: 'any',
       },
       {
-        src: '/images/favicon-8.png',
-        sizes: '256x256',
-        type: 'image/png',
-        purpose: 'any'
-      },
-      {
-        src: '/images/favicon-8.png',
+        src: '/images/favicon-512.png',
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'any maskable'
-      }
-    ]
+        purpose: 'any',
+      },
+      {
+        src: '/images/favicon-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+    ],
   },
   workbox: {
-    globPatterns: ['**/*.{js,css,html,ico,png,woff2}'],
+    globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
     navigateFallback: '/offline.html',
     runtimeCaching: [
       {
-        urlPattern: /^https:\/\/fonts\.googleapis\.com/,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'google-fonts-cache',
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 60 * 60 * 24 * 365
-          }
-        }
-      },
-      {
-        urlPattern: /^https:\/\/fonts\.gstatic\.com/,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'gstatic-fonts-cache',
-          expiration: {
-            maxEntries: 10,
-            maxAgeSeconds: 60 * 60 * 24 * 365
-          }
-        }
-      },
-      {
-        urlPattern: /^https:\/\/hacker-news\.firebaseio\.com/,
-        handler: 'NetworkFirst',
-        options: {
-          cacheName: 'hn-api-cache',
-          expiration: {
-            maxEntries: 50,
-            maxAgeSeconds: 60 * 30
-          },
-          cacheableResponse: {
-            statuses: [0, 200]
-          }
-        }
-      },
-      {
         urlPattern: /^https:\/\/duckduckgo\.com/,
-        handler: 'NetworkOnly'
-      }
-    ]
-  }
-}
+        handler: 'NetworkOnly',
+      },
+    ],
+  },
+};

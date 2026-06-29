@@ -3,44 +3,48 @@ import { workspaceManager } from '../lib/WorkspaceManager.js';
 const tabsTemplate = document.createElement('template');
 tabsTemplate.innerHTML = `
   <style>
+    :host {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+
     .tabs-container {
       display: flex;
-      gap: 0;
-      margin-bottom: var(--space-lg);
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-lg);
+      gap: 2px;
+      background: var(--color-focus);
+      border-radius: var(--border-radius-full);
       overflow: hidden;
       position: relative;
       width: 100%;
-      box-shadow: var(--shadow-sm);
+      max-width: 100%;
+      padding: 2px;
+      box-shadow: inset 0 0 0 1px var(--color-border-subtle);
     }
 
     .tab {
       background: transparent;
       border: none;
-      border-right: 1px solid var(--color-border);
-      color: var(--color-text-subtle);
+      color: var(--color-text-muted);
       cursor: pointer;
-      font-family: var(--font-family);
+      font-family: var(--font-family-mono);
       font-size: 0.68rem;
       font-weight: var(--font-weight-normal);
-      letter-spacing: 0.08em;
-      padding: var(--space-sm) var(--space-md);
+      letter-spacing: 0.01em;
+      padding: 0.3rem 0.5rem;
+      border-radius: var(--border-radius-full);
+      flex: 1 1 0;
+      min-width: 0;
       position: relative;
-      text-transform: uppercase;
-      transition: 
-        color var(--duration-normal) var(--ease-spring),
-        background var(--duration-normal) var(--ease-spring);
+      transition:
+        color var(--duration-normal) var(--ease-out),
+        background var(--duration-normal) var(--ease-out);
       outline: 0;
       display: flex;
       align-items: center;
-      gap: var(--space-xs);
+      gap: 0.3rem;
       z-index: 1;
-    }
-
-    .tab:last-child {
-      border-right: none;
     }
 
     .tab:hover {
@@ -67,60 +71,30 @@ tabsTemplate.innerHTML = `
     }
 
     .tab.active {
-      color: var(--color-accent);
-      background: var(--color-accent-subtle);
+      color: var(--color-text);
+      background: var(--color-surface-elevated);
+      box-shadow: var(--shadow-sm);
     }
 
     .tab-indicator {
-      position: absolute;
-      bottom: 0;
-      height: 2px;
-      background: var(--color-accent);
-      transition: 
-        left var(--duration-slow) var(--ease-spring),
-        width var(--duration-slow) var(--ease-spring);
-      pointer-events: none;
-      will-change: left, width;
+      display: none;
     }
 
     .tab-key {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1.15rem;
-      height: 1.15rem;
-      font-size: 0.58rem;
+      min-width: 0.95rem;
+      height: 0.95rem;
+      font-size: 0.55rem;
       font-weight: var(--font-weight-bold);
-      background: transparent;
-      border: 1px solid var(--color-text-muted);
-      border-radius: var(--border-radius);
-      opacity: 0.5;
-      transition: 
-        opacity var(--duration-normal) var(--ease-spring),
-        border-color var(--duration-normal) var(--ease-spring),
-        background var(--duration-normal) var(--ease-spring),
-        box-shadow var(--duration-normal) var(--ease-spring),
-        color var(--duration-normal) var(--ease-spring);
-    }
-
-    .tab:hover .tab-key {
-      opacity: 0.8;
-      border-color: var(--color-text-subtle);
+      color: var(--color-text-muted);
+      opacity: 0.7;
     }
 
     .tab.active .tab-key {
+      color: var(--color-accent);
       opacity: 1;
-      border-color: var(--color-accent);
-      background: var(--color-accent);
-      color: var(--color-background);
-      box-shadow: 0 0 12px var(--color-accent-glow);
-    }
-
-    @media (min-width: 600px) {
-      .tab {
-        font-size: 0.72rem;
-        padding: var(--space-sm) var(--space-md);
-      }
     }
   </style>
   <nav class="tabs-container" role="tablist" aria-label="Workspaces"></nav>
@@ -242,7 +216,6 @@ export class Tabs extends HTMLElement {
     if (activeTab) {
       const tabRect = activeTab.getBoundingClientRect();
       const containerRect = this.#tabsContainer.getBoundingClientRect();
-      // Use requestAnimationFrame for smoother animation
       requestAnimationFrame(() => {
         this.#indicator.style.left = `${tabRect.left - containerRect.left}px`;
         this.#indicator.style.width = `${tabRect.width}px`;

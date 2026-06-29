@@ -3,29 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#080909" />
     <title>Offline - M1n Startpage</title>
     <style>
       :root {
-        --bg: #080909;
-        --bg-glow: rgba(124, 186, 95, 0.08);
-        --surface: #0f1010;
-        --surface-elevated: #141616;
-        --text: #e2e4e2;
-        --muted: #848b8b;
-        --border: #1c1f1f;
-        --accent: #7cba5f;
+        --color-background: #080909;
+        --color-surface: #0d0e0e;
+        --color-text: #e0e2e0;
+        --color-text-muted: #565e5e;
+        --color-border: #1a1d1d;
+        --color-accent: #7cba5f;
+        --zone-radius: 0.625rem;
       }
 
       @media (prefers-color-scheme: light) {
         :root {
-          --bg: #f0f1f0;
-          --bg-glow: rgba(91, 148, 59, 0.08);
-          --surface: #e8e9e8;
-          --surface-elevated: #ffffff;
-          --text: #181a18;
-          --muted: #5a6060;
-          --border: #d4d6d4;
-          --accent: #5b943b;
+          --color-background: #eceeed;
+          --color-surface: #f5f6f5;
+          --color-text: #161816;
+          --color-text-muted: #727979;
+          --color-border: #d0d3d0;
+          --color-accent: #5b943b;
         }
       }
 
@@ -36,102 +35,87 @@
       }
 
       body {
-        font-family: 'IBM Plex Mono', monospace;
+        font-family:
+          'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
         background:
-          radial-gradient(circle at top, var(--bg-glow), transparent 45%),
-          var(--bg);
-        color: var(--text);
-        min-height: 100vh;
+          radial-gradient(
+            ellipse 80% 50% at 50% -10%,
+            rgba(124, 186, 95, 0.035),
+            transparent 70%
+          ),
+          var(--color-background);
+        color: var(--color-text);
+        min-height: 100dvh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 2rem;
+        padding: 1.25rem;
       }
 
       .container {
         width: min(100%, 28rem);
-        padding: 2rem;
+        padding: 1.5rem;
         text-align: center;
-        background: rgba(20, 22, 22, 0.82);
-        border: 1px solid var(--border);
-        border-radius: 0.5rem;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-        backdrop-filter: blur(10px);
-      }
-
-      @media (prefers-color-scheme: light) {
-        .container {
-          background: rgba(255, 255, 255, 0.86);
-        }
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--zone-radius);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
       }
 
       .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        color: var(--accent);
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
+        color: var(--color-accent);
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        margin-bottom: 1rem;
-      }
-
-      .status::before {
-        content: '';
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 999px;
-        background: currentColor;
-        box-shadow: 0 0 12px currentColor;
-      }
-
-      h1 {
-        font-size: clamp(1.6rem, 4vw, 2.2rem);
-        font-weight: 500;
         margin-bottom: 0.85rem;
       }
 
+      h1 {
+        font-size: clamp(1.35rem, 4vw, 1.75rem);
+        font-weight: 500;
+        margin-bottom: 0.65rem;
+      }
+
       p {
-        color: var(--muted);
-        margin-bottom: 1.75rem;
-        line-height: 1.7;
+        color: var(--color-text-muted);
+        margin-bottom: 1.25rem;
+        line-height: 1.6;
+        font-size: 0.85rem;
       }
 
       button {
         font-family: inherit;
-        background: var(--accent);
-        color: #080909;
+        background: var(--color-accent);
+        color: var(--color-background);
         border: 1px solid transparent;
-        padding: 0.8rem 1.35rem;
-        border-radius: 999px;
+        padding: 0.55rem 1rem;
+        border-radius: 0.25rem;
         cursor: pointer;
-        font-size: 0.82rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
         transition:
-          transform 0.15s ease,
           opacity 0.2s ease,
-          box-shadow 0.2s ease;
+          transform 0.15s ease;
       }
 
       button:hover,
       button:focus-visible {
-        opacity: 0.96;
+        opacity: 0.92;
         transform: translateY(-1px);
-        box-shadow: 0 0 20px rgba(124, 186, 95, 0.18);
         outline: none;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="status">Offline mode</div>
+      <div class="status">Offline</div>
       <h1>You're offline</h1>
       <p>
-        Your shortcuts still live here, but live content and fresh searches need
-        a connection. Reconnect and reload when you're ready.
+        Shortcuts still work from cache. Live search needs a connection.
       </p>
-      <button onclick="window.location.reload()">Try Again</button>
+      <button type="button" onclick="window.location.reload()">
+        Try again
+      </button>
     </div>
   </body>
 </html>

@@ -5,147 +5,45 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="theme-color"
-      content="#0c0d0d"
-      media="(prefers-color-scheme: dark)"
-    />
-    <meta
-      name="theme-color"
-      content="#f3f4f4"
-      media="(prefers-color-scheme: light)"
-    />
+    <meta name="theme-color" content="#080909" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <meta name="apple-mobile-web-app-title" content="M1n Startpage" />
+    <meta name="apple-mobile-web-app-title" content="M1n" />
     <meta name="application-name" content="M1n Startpage" />
 
-    <link rel="apple-touch-icon" href="/images/favicon-8.png" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/favicon-192.png"
+    />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>M1n Startpage</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://hacker-news.firebaseio.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      html {
-        background-color: var(--color-background);
-        font-family: var(--font-family);
-        font-size: var(--font-size);
-        line-height: 1.4;
-        letter-spacing: var(--letter-spacing);
-        overflow-x: hidden;
-        scrollbar-width: none;
-      }
-
-      html::-webkit-scrollbar {
-        display: none;
-      }
-
-      body {
-        margin: 0;
-        overflow-x: hidden;
-        scrollbar-width: none;
-        background-color: var(--color-background);
-        background-image: repeating-linear-gradient(
-          to bottom,
-          transparent 0,
-          transparent 2px,
-          var(--color-scanline) 2px,
-          var(--color-scanline) 3px
-        );
-        min-height: 100dvh;
-      }
-
-      body::-webkit-scrollbar {
-        display: none;
-      }
-
-      body.offline::after {
-        content: 'Offline';
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        padding: 0.5rem 1rem;
-        background: var(--color-accent);
-        color: var(--color-background);
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        z-index: 9999;
-      }
-
-      main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        box-sizing: border-box;
-        min-height: 100dvh;
-        width: 100vw;
-        padding: var(--space-xl) var(--space-md) var(--space-xl);
-        overflow: hidden;
-        position: relative;
-        opacity: 0;
-        animation: fadeIn var(--duration-slow) var(--ease-spring) forwards;
-        scrollbar-width: none;
-        transition: background-color var(--duration-normal) var(--ease-spring);
-      }
-
-      main::-webkit-scrollbar {
-        display: none;
-      }
-
-      .main-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 40rem;
-        gap: var(--space-lg);
-        padding: 0 var(--space-sm);
-      }
-
-      news-feed-component {
-        width: 100%;
-        max-width: 40rem;
-        padding-bottom: var(--space-lg);
-      }
-
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        main {
-          animation: none;
-          opacity: 1;
-        }
-      }
-    </style>
   </head>
   <body>
     <main>
-      <div class="main-content">
-        <tabs-component></tabs-component>
+      <section class="zone zone-search" aria-label="Search">
+        <div id="search-affordance"></div>
+      </section>
+      <section class="zone zone-moment" aria-label="Time">
         <clock-component></clock-component>
+      </section>
+      <section class="zone zone-actions" aria-label="Shortcuts">
+        <tabs-component></tabs-component>
         <commands-component></commands-component>
-        <search-component></search-component>
-        <news-feed-component></news-feed-component>
-      </div>
+      </section>
     </main>
+    <search-component></search-component>
 
     <script type="module" src="/src/main.js"></script>
   </body>

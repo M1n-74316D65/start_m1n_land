@@ -1,5 +1,8 @@
+import './styles/fonts.css';
 import './styles/variables.css';
+import './styles/layout.css';
 import { workspaceManager } from './lib/WorkspaceManager.js';
+import { getThemeColor } from './pwa-tokens.js';
 
 function checkForSWUpdate() {
   if ('serviceWorker' in navigator) {
@@ -35,10 +38,24 @@ function initOfflineDetection() {
 
 function updateThemeColor() {
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const color = isDark ? '#0c0d0d' : '#f3f4f4';
+  const color =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--pwa-theme-color')
+      .trim() || getThemeColor(isDark);
+
   document
     .querySelector('meta[name="theme-color"]')
     ?.setAttribute('content', color);
+
+  const appleStatusBar = document.querySelector(
+    'meta[name="apple-mobile-web-app-status-bar-style"]'
+  );
+  if (appleStatusBar) {
+    appleStatusBar.setAttribute(
+      'content',
+      isDark ? 'black-translucent' : 'default'
+    );
+  }
 }
 
 function initKeyboardShortcuts() {
@@ -90,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./components/Tabs.js'),
     import('./components/Commands.js'),
     import('./components/Search.js'),
-    import('./components/NewsFeed.js'),
   ];
 
   Promise.allSettled(components).then((results) => {
