@@ -10,9 +10,16 @@ export const CONFIG = {
 };
 
 export const COMMANDS = new Map([
-  // Personal (alphabetical by key)
-  ['1', { name: 'M1n', url: 'https://m1n.land/', workspace: 'personal' }],
+  // Personal (alphabetical by name)
   ['A', { name: 'Mastodon', url: 'https://social.lol', workspace: 'personal' }],
+  [
+    'M',
+    {
+      name: 'Minttr',
+      url: 'https://my.minttr.com/',
+      workspace: 'personal',
+    },
+  ],
   [
     'B',
     { name: 'Pastebin', url: 'https://paste.m1n.land/', workspace: 'personal' },
@@ -22,14 +29,6 @@ export const COMMANDS = new Map([
     {
       name: 'Posteo',
       url: 'https://posteo.de/webmail/',
-      workspace: 'personal',
-    },
-  ],
-  [
-    'M',
-    {
-      name: 'Minttr',
-      url: 'https://my.minttr.com/',
       workspace: 'personal',
     },
   ],
@@ -54,7 +53,7 @@ export const COMMANDS = new Map([
       workspace: 'personal',
     },
   ],
-  // Dev (alphabetical by key)
+  // Dev (alphabetical by name)
   [
     'F',
     {
@@ -63,10 +62,10 @@ export const COMMANDS = new Map([
       workspace: 'dev',
     },
   ],
-  ['H', { name: 'SourceHut', url: 'https://git.sr.ht/', workspace: 'dev' }],
-  ['I', { name: 'Pico', url: 'https://pico.sh', workspace: 'dev' }],
   ['N', { name: 'Neon', url: 'https://neon.tech', workspace: 'dev' }],
+  ['I', { name: 'Pico', url: 'https://pico.sh', workspace: 'dev' }],
   ['S', { name: 'Server', url: 'http://192.168.1.139', workspace: 'dev' }],
+  ['H', { name: 'SourceHut', url: 'https://git.sr.ht/', workspace: 'dev' }],
   [
     'V',
     { name: 'Vercel', url: 'https://vercel.com/dashboard', workspace: 'dev' },

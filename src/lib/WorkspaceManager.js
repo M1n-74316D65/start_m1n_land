@@ -50,6 +50,14 @@ export class WorkspaceManager {
       workspaceMap.get(workspaceId).commands.push({ key, command });
     }
 
+    for (const workspace of workspaceMap.values()) {
+      workspace.commands.sort((a, b) =>
+        a.command.name.localeCompare(b.command.name, undefined, {
+          sensitivity: 'base',
+        })
+      );
+    }
+
     const orderedWorkspaces = Array.from(workspaceMap.values());
     const order = ['personal', 'dev'];
     orderedWorkspaces.sort((a, b) => {

@@ -55,7 +55,7 @@ commandsTemplate.innerHTML = `
       display: flex;
       gap: var(--space-sm);
       outline: 0;
-      padding: 0.5rem 0.55rem;
+      padding: var(--space-sm) var(--space-md);
       position: relative;
       text-decoration: none;
       min-height: 2.35rem;

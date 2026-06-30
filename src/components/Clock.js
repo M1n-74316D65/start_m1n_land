@@ -11,7 +11,7 @@ clockTemplate.innerHTML = `
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.35rem;
+      gap: var(--space-xs);
       text-align: left;
       min-width: 0;
       max-width: 100%;

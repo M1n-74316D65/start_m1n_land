@@ -14,6 +14,13 @@
   --zone-radius: 0.625rem;
   --key-radius: 0.25rem;
 
+  /* Layout padding — single source of truth */
+  --layout-inset-x: var(--space-md);
+  --layout-inset-y: var(--space-lg);
+  --zone-pad-block: var(--space-lg);
+  --zone-pad-inline: var(--space-lg);
+  --zone-col-gutter: var(--space-md);
+
   /* Border radius */
   --border-radius: var(--key-radius);
   --border-radius-sm: 0.125rem;
@@ -70,6 +77,12 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.35);
   --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 34rem) {
+  :root {
+    --layout-inset-x: var(--space-lg);
+  }
 }
 
 @media (prefers-color-scheme: light) {

@@ -31,7 +31,7 @@ searchTemplate.innerHTML = `
       height: 100%;
       justify-content: center;
       left: 0;
-      padding: var(--space-md);
+      padding: var(--layout-inset-y) var(--layout-inset-x);
       top: 0;
       width: 100%;
       opacity: 0;
@@ -91,7 +91,7 @@ searchTemplate.innerHTML = `
       align-items: center;
       justify-content: space-between;
       gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-lg);
+      padding: var(--zone-pad-block) var(--zone-pad-inline);
       border-bottom: 1px solid var(--color-border-subtle);
     }
 
@@ -129,7 +129,7 @@ searchTemplate.innerHTML = `
 
     .input-container {
       position: relative;
-      padding: var(--space-md) var(--space-lg);
+      padding: var(--zone-pad-block) var(--zone-pad-inline);
     }
 
     .input {
