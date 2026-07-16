@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="dark light" />
     <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#080909" />
+    <meta name="theme-color" content="#060706" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -32,14 +32,14 @@
   </head>
   <body>
     <main>
-      <section class="zone zone-search" aria-label="Search">
-        <div id="search-affordance"></div>
+      <section class="zone zone-header" aria-label="Workspace">
+        <tabs-component></tabs-component>
       </section>
       <section class="zone zone-moment" aria-label="Time">
         <clock-component></clock-component>
+        <div id="search-affordance"></div>
       </section>
       <section class="zone zone-actions" aria-label="Shortcuts">
-        <tabs-component></tabs-component>
         <commands-component></commands-component>
       </section>
     </main>

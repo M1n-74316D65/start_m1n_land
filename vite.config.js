@@ -18,7 +18,5 @@ export default defineConfig({
     port: 8000,
     open: false,
   },
-  plugins: [
-    VitePWA(pwaConfig)
-  ],
+  plugins: [VitePWA(pwaConfig)],
 });

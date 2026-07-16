@@ -42,7 +42,7 @@ searchTemplate.innerHTML = `
     }
 
     .dialog::backdrop {
-      background: color-mix(in srgb, var(--color-background) 72%, transparent);
+      background: color-mix(in srgb, var(--color-background) 88%, transparent);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       opacity: 0;
@@ -81,8 +81,8 @@ searchTemplate.innerHTML = `
     .search-panel {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-radius: var(--zone-radius);
-      box-shadow: var(--shadow-panel);
+      border-radius: 0;
+      box-shadow: 0 12px 40px color-mix(in srgb, var(--color-background) 65%, transparent);
       overflow: hidden;
     }
 
@@ -91,16 +91,25 @@ searchTemplate.innerHTML = `
       align-items: center;
       justify-content: space-between;
       gap: var(--space-sm);
-      padding: var(--zone-pad-block) var(--zone-pad-inline);
-      border-bottom: 1px solid var(--color-border-subtle);
+      padding: 0.55rem var(--space-lg);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
     }
 
     .search-panel-label {
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+    }
+
+    .search-workspace {
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.02em;
+      text-transform: none;
+      margin-left: 0.35rem;
     }
 
     .search-panel-hint {
@@ -119,7 +128,7 @@ searchTemplate.innerHTML = `
       min-width: 1.2rem;
       padding: 0.05rem 0.3rem;
       border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-sm);
+      border-radius: 0;
       background: var(--color-focus);
       color: var(--color-text-subtle);
       font-family: inherit;
@@ -129,13 +138,13 @@ searchTemplate.innerHTML = `
 
     .input-container {
       position: relative;
-      padding: var(--zone-pad-block) var(--zone-pad-inline);
+      padding: var(--space-lg);
     }
 
     .input {
       color: var(--color-text);
       font-family: var(--font-family-mono);
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
       font-weight: var(--font-weight-normal);
       padding: var(--space-sm) 2rem var(--space-sm) var(--space-md);
       text-align: left;
@@ -144,8 +153,8 @@ searchTemplate.innerHTML = `
       letter-spacing: 0.01em;
       background: var(--color-focus);
       border: none;
-      border-radius: var(--key-radius);
-      box-shadow: inset 0 0 0 1px var(--color-border-subtle);
+      border-radius: 0;
+      box-shadow: inset 0 0 0 1px var(--color-border);
       transition:
         box-shadow var(--duration-normal) var(--ease-out),
         background var(--duration-normal) var(--ease-out);
@@ -171,7 +180,7 @@ searchTemplate.innerHTML = `
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: var(--key-radius);
+      border-radius: 0;
       color: var(--color-text-muted);
       background: transparent;
       cursor: pointer;
@@ -183,14 +192,20 @@ searchTemplate.innerHTML = `
         color var(--duration-fast) var(--ease-out);
     }
 
-    .clear-btn:visible {
+    .clear-btn[visible] {
       opacity: 1;
       pointer-events: auto;
     }
 
     .clear-btn:hover {
       background: var(--color-accent-subtle);
-      color: var(--color-accent);
+      color: var(--color-text);
+    }
+
+    .clear-btn:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 1px var(--color-accent);
+      color: var(--color-text);
     }
 
     .clear-btn:active {
@@ -204,7 +219,7 @@ searchTemplate.innerHTML = `
       transform: translateY(-50%);
       width: 0.9rem;
       height: 0.9rem;
-      border: 2px solid var(--color-border-subtle);
+      border: 2px solid var(--color-border);
       border-top-color: var(--color-accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -213,7 +228,7 @@ searchTemplate.innerHTML = `
       transition: opacity var(--duration-fast) var(--ease-out);
     }
 
-    .spinner:visible {
+    .spinner[visible] {
       opacity: 1;
     }
 
@@ -222,7 +237,7 @@ searchTemplate.innerHTML = `
     }
 
     .suggestions-wrapper {
-      border-top: 1px solid var(--color-border-subtle);
+      border-top: 1px solid var(--color-border);
       min-height: 0;
     }
 
@@ -237,7 +252,7 @@ searchTemplate.innerHTML = `
       margin: 0;
       padding: 0;
       gap: 1px;
-      background: var(--color-border-subtle);
+      background: var(--color-border);
     }
 
     .suggestion {
@@ -296,7 +311,7 @@ searchTemplate.innerHTML = `
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
       <div class="search-panel">
         <div class="search-panel-header">
-          <span class="search-panel-label">Search</span>
+          <span class="search-panel-label">Search <span class="search-workspace"></span></span>
           <span class="search-panel-hint"><kbd>esc</kbd> close</span>
         </div>
         <div class="input-container">
@@ -335,12 +350,14 @@ export class Search extends HTMLElement {
   #suggestions;
   #clearBtn;
   #spinner;
+  #workspaceLabel;
   #activeWorkspaceId;
   #previousFocus;
   #isLoading = false;
   #affordance;
   #affordanceHost;
   #boundAffordanceClick;
+  #boundWorkspaceChange;
 
   constructor() {
     super();
@@ -352,7 +369,9 @@ export class Search extends HTMLElement {
     this.#suggestions = this.shadowRoot.querySelector('.suggestions');
     this.#clearBtn = this.shadowRoot.querySelector('.clear-btn');
     this.#spinner = this.shadowRoot.querySelector('.spinner');
+    this.#workspaceLabel = this.shadowRoot.querySelector('.search-workspace');
     this.#activeWorkspaceId = workspaceManager.activeWorkspaceId;
+    this.#updateWorkspaceLabel();
     this.#initializeEventListeners();
   }
 
@@ -374,7 +393,7 @@ export class Search extends HTMLElement {
     this.#affordance.className = 'search-affordance';
     this.#affordance.setAttribute('aria-label', 'Open search');
     this.#affordance.innerHTML = `
-      <span class="search-affordance-label">Search or go to URL</span>
+      <span class="search-affordance-label">command, url, or query<span class="search-affordance-cursor" aria-hidden="true"></span></span>
       <span class="search-affordance-hint"><kbd>/</kbd></span>
     `;
 
@@ -387,414 +406,409 @@ export class Search extends HTMLElement {
     if (this.#affordance && this.#boundAffordanceClick) {
       this.#affordance.removeEventListener('click', this.#boundAffordanceClick);
     }
-    if (this.#affordanceHost) {
-      this.#affordanceHost.replaceChildren();
+    if (this.#affordance && this.#affordance.parentNode) {
+      this.#affordance.parentNode.removeChild(this.#affordance);
     }
     this.#affordance = null;
-    this.#affordanceHost = null;
-    this.#boundAffordanceClick = null;
-  }
-
-  #boundSubmit = this.#onSubmit.bind(this);
-  #boundInput = Search.#debounce(this.#onInput.bind(this), 300);
-  #boundSuggestionClick = this.#onSuggestionClick.bind(this);
-  #boundKeydown = this.#onKeydown.bind(this);
-  #boundClear = this.#onClear.bind(this);
-  #boundWorkspaceChange = (e) => {
-    this.#activeWorkspaceId = e.detail.workspaceId;
-  };
-
-  #initializeEventListeners() {
-    this.#form.addEventListener('submit', this.#boundSubmit, false);
-    this.#input.addEventListener('input', this.#boundInput);
-    this.#suggestions.addEventListener('click', this.#boundSuggestionClick);
-    this.#clearBtn.addEventListener('click', this.#boundClear);
-    document.addEventListener('keydown', this.#boundKeydown);
-    window.addEventListener('workspacechange', this.#boundWorkspaceChange);
   }
 
   #removeEventListeners() {
-    this.#form.removeEventListener('submit', this.#boundSubmit);
-    this.#input.removeEventListener('input', this.#boundInput);
-    this.#suggestions.removeEventListener('click', this.#boundSuggestionClick);
-    this.#clearBtn.removeEventListener('click', this.#boundClear);
-    document.removeEventListener('keydown', this.#boundKeydown);
-    window.removeEventListener('workspacechange', this.#boundWorkspaceChange);
-  }
-
-  static #debounce(fn, delay) {
-    let timeoutId;
-    return function (...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => fn.apply(this, args), delay);
-    };
-  }
-
-  static async #fetchDuckDuckGoSuggestions(search) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-      const response = await fetch(
-        `https://duckduckgo.com/ac/?q=${encodeURIComponent(search)}&type=list`,
-        {
-          signal: controller.signal,
-          headers: { Accept: 'application/json' },
-        }
-      );
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) return [];
-
-      const data = await response.json();
-
-      if (!Array.isArray(data) || data.length < 2) return [];
-
-      const suggestions = data[1];
-      if (!Array.isArray(suggestions)) return [];
-
-      return suggestions
-        .filter((item) => item.toLowerCase() !== search.toLowerCase())
-        .slice(0, CONFIG.suggestionLimit);
-    } catch {
-      return [];
+    if (this.#boundWorkspaceChange) {
+      window.removeEventListener('workspacechange', this.#boundWorkspaceChange);
     }
   }
 
-  static #formatSearchUrl(template, search) {
-    return template.replace(/{}/g, encodeURIComponent(search));
+  #initializeEventListeners() {
+    this.#dialog.addEventListener('click', (e) => {
+      if (e.target === this.#dialog) this.#close();
+    });
+
+    this.#dialog.addEventListener('close', () => {
+      if (this.#previousFocus) this.#previousFocus.focus();
+    });
+
+    this.#input.addEventListener('input', () => this.#handleInput());
+    this.#input.addEventListener('keydown', (e) => this.#handleKeyDown(e));
+
+    this.#clearBtn.addEventListener('click', () => {
+      this.#input.value = '';
+      this.#input.focus();
+      this.#clearSuggestions();
+      this.#updateClearButton();
+    });
+
+    this.#suggestions.addEventListener('click', (e) => {
+      const suggestion = e.target.closest('.suggestion');
+      if (!suggestion) return;
+      this.#selectSuggestion(suggestion);
+    });
+
+    document.addEventListener('keydown', (e) => this.#handleGlobalKeyDown(e));
+
+    this.#boundWorkspaceChange = (e) => {
+      this.#activeWorkspaceId = e.detail.workspaceId;
+      this.#updateWorkspaceLabel();
+    };
+    window.addEventListener('workspacechange', this.#boundWorkspaceChange);
   }
 
-  static #hasProtocol(s) {
-    return /^[a-z][a-z0-9+.-]*:\/\//i.test(s);
+  #updateWorkspaceLabel() {
+    const workspace = workspaceManager.activeWorkspace;
+    this.#workspaceLabel.textContent = workspace ? `// ${workspace.name}` : '';
   }
 
-  static #isUrl(s) {
-    return /^(https?:\/\/)?[\w-]+(\.[\w-]+)+/.test(s);
-  }
+  #handleGlobalKeyDown(event) {
+    if (event.key === '/' && !this.#isInputElement(event.target)) {
+      event.preventDefault();
+      this.#open('');
+      return;
+    }
 
-  static #compareKey(key) {
-    return CONFIG.commandCaseSensitive ? key : key.toLowerCase();
-  }
-
-  static #isEditableTarget(target) {
-    if (!(target instanceof HTMLElement)) return false;
-
-    if (target.isContentEditable) return true;
-
-    return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
-  }
-
-  static #isPrintableKey(event) {
-    return (
+    if (
       event.key.length === 1 &&
-      event.key !== ' ' &&
       !event.ctrlKey &&
       !event.metaKey &&
-      !event.altKey
+      !event.altKey &&
+      !this.#isInputElement(event.target)
+    ) {
+      event.preventDefault();
+      this.#open(event.key);
+    }
+  }
+
+  #isInputElement(element) {
+    const tagName = element.tagName.toLowerCase();
+    return (
+      tagName === 'input' || tagName === 'textarea' || element.isContentEditable
     );
   }
 
-  static #getCommandWithKey(key, workspaceCommands) {
-    if (CONFIG.commandCaseSensitive) {
-      const command = workspaceCommands.get(key);
-      return command ? { command, key } : undefined;
+  #open(initialValue) {
+    if (this.#dialog.open) return;
+    this.#previousFocus = document.activeElement;
+    this.#dialog.showModal();
+    this.#input.value = initialValue;
+    this.#input.focus();
+    this.#updateClearButton();
+    if (initialValue) {
+      this.#handleInput();
     } else {
-      const lowerKey = key.toLowerCase();
-      for (const [cmdKey, value] of workspaceCommands) {
-        if (cmdKey.toLowerCase() === lowerKey) {
-          return { command: value, key: cmdKey };
-        }
-      }
-      return undefined;
+      this.#clearSuggestions();
     }
-  }
-
-  #parseQuery(raw) {
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
-    const query = raw.trim();
-    const compareQuery = Search.#compareKey(query);
-
-    if (Search.#isUrl(query)) {
-      const url = Search.#hasProtocol(query) ? query : `https://${query}`;
-      return { query, url };
-    }
-
-    const result = Search.#getCommandWithKey(query, workspaceCommands);
-    if (result) {
-      return { key: result.key, query, url: result.command.url };
-    }
-
-    const [commandPart, searchPart] = query.split(
-      new RegExp(`${CONFIG.commandSearchDelimiter}(.*)`)
-    );
-    const commandPartResult = Search.#getCommandWithKey(
-      commandPart,
-      workspaceCommands
-    );
-    if (commandPartResult) {
-      const search = searchPart ? searchPart.trim() : '';
-      const template = new URL(
-        commandPartResult.command.searchTemplate ?? '',
-        commandPartResult.command.url
-      );
-      const url = Search.#formatSearchUrl(decodeURI(template.href), search);
-      return { key: commandPartResult.key, query, search, url };
-    }
-
-    const [pathKey, path] = query.split(
-      new RegExp(`${CONFIG.commandPathDelimiter}(.*)`)
-    );
-    const pathKeyResult = Search.#getCommandWithKey(pathKey, workspaceCommands);
-    if (pathKeyResult) {
-      const url = `${new URL(pathKeyResult.command.url).origin}/${path || ''}`;
-      return { key: pathKeyResult.key, path, query, url };
-    }
-
-    const url = Search.#formatSearchUrl(CONFIG.defaultSearchTemplate, query);
-    return { query, search: query, url };
-  }
-
-  #setLoading(loading) {
-    this.#isLoading = loading;
-    this.#spinner.toggleAttribute('visible', loading);
-  }
-
-  #updateClearBtn() {
-    this.#clearBtn.toggleAttribute('visible', this.#input.value.length > 0);
   }
 
   #close() {
-    this.#input.value = '';
-    this.#updateClearBtn();
-    this.#setLoading(false);
-    this.#input.blur();
-    this.#dialog.style.opacity = '0';
-    this.#dialog.style.transform = 'translateY(6px)';
-
-    setTimeout(() => {
-      this.#dialog.close();
-      this.#dialog.style.opacity = '';
-      this.#dialog.style.transform = '';
-      this.#suggestions.replaceChildren();
-      if (
-        this.#previousFocus &&
-        this.#previousFocus.isConnected &&
-        typeof this.#previousFocus.focus === 'function'
-      ) {
-        this.#previousFocus.focus();
-        this.#previousFocus = null;
-      }
-    }, 150);
+    if (!this.#dialog.open) return;
+    this.#dialog.close();
   }
 
-  #open(initialValue = '') {
-    this.#previousFocus = document.activeElement;
-    if (!this.#dialog.open) {
-      this.#dialog.showModal();
+  #handleInput() {
+    const value = this.#input.value.trim();
+    this.#updateClearButton();
+
+    if (!value) {
+      this.#clearSuggestions();
+      return;
     }
 
-    this.#input.value = initialValue;
-    this.#updateClearBtn();
-    this.#input.focus();
-
-    if (initialValue) {
-      this.#input.setSelectionRange(initialValue.length, initialValue.length);
-      this.#onInput();
-    } else {
-      this.#suggestions.replaceChildren();
-    }
+    this.#fetchSuggestions(value);
   }
 
-  #execute(query) {
-    const parsedQuery = this.#parseQuery(query);
-    if (parsedQuery.key) {
-      UsageTracker.recordUsage(parsedQuery.key);
-    }
-    const target = CONFIG.openLinksInNewTab ? '_blank' : '_self';
-    window.open(parsedQuery.url, target, 'noopener noreferrer');
-    this.#close();
+  #updateClearButton() {
+    const hasValue = this.#input.value.length > 0;
+    this.#clearBtn.toggleAttribute('visible', hasValue);
   }
 
-  #focusNextSuggestion(previous = false) {
-    const active = this.shadowRoot.activeElement;
-    let nextIndex;
-
-    if (active.dataset.index) {
-      const activeIndex = Number(active.dataset.index);
-      nextIndex = previous ? activeIndex - 1 : activeIndex + 1;
-    } else {
-      nextIndex = previous ? this.#suggestions.childElementCount - 1 : 0;
-    }
-
-    const next = this.#suggestions.children[nextIndex];
-    if (next) next.querySelector('.suggestion').focus();
-    else this.#input.focus();
-  }
-
-  async #onInput() {
-    this.#updateClearBtn();
-
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
-    const inputValue = this.#input.value;
-    const parsedQuery = this.#parseQuery(inputValue);
-
-    if (!parsedQuery.query) {
+  #handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
       this.#close();
       return;
     }
 
-    const result = Search.#getCommandWithKey(
-      parsedQuery.key || parsedQuery.query,
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const activeSuggestion = this.#suggestions.querySelector(
+        '.suggestion:focus-visible'
+      );
+      if (activeSuggestion) {
+        this.#selectSuggestion(activeSuggestion);
+      } else {
+        this.#executeSearch(this.#input.value.trim());
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.#navigateSuggestions(event.key === 'ArrowDown' ? 1 : -1);
+    }
+  }
+
+  #navigateSuggestions(direction) {
+    const suggestions = Array.from(
+      this.#suggestions.querySelectorAll('.suggestion')
+    );
+    if (suggestions.length === 0) return;
+
+    const activeIndex = suggestions.findIndex(
+      (s) => s === document.activeElement
+    );
+    let nextIndex;
+
+    if (activeIndex === -1) {
+      nextIndex = direction > 0 ? 0 : suggestions.length - 1;
+    } else {
+      nextIndex = activeIndex + direction;
+      if (nextIndex < 0) nextIndex = suggestions.length - 1;
+      if (nextIndex >= suggestions.length) nextIndex = 0;
+    }
+
+    suggestions[nextIndex].focus();
+  }
+
+  #clearSuggestions() {
+    this.#suggestions.replaceChildren();
+  }
+
+  #setLoading(isLoading) {
+    this.#isLoading = isLoading;
+    this.#spinner.toggleAttribute('visible', isLoading);
+  }
+
+  async #fetchSuggestions(value) {
+    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
+      this.#activeWorkspaceId
+    );
+    const matchingCommands = this.#findMatchingCommands(
+      value,
       workspaceCommands
     );
-    let suggestions = result?.command?.suggestions ?? [];
+    const commandSuggestions = matchingCommands.slice(
+      0,
+      CONFIG.suggestionLimit
+    );
 
-    if (parsedQuery.search && suggestions.length < CONFIG.suggestionLimit) {
-      this.#setLoading(true);
-      const ddgSuggestions = await Search.#fetchDuckDuckGoSuggestions(
-        parsedQuery.search
-      );
+    const query = this.#extractQuery(value);
+    const searchSuggestions = query
+      ? await this.#fetchDuckDuckGoSuggestions(query)
+      : [];
 
-      // Re-check input hasn't changed during async fetch
-      if (
-        Search.#compareKey(this.#input.value) !== Search.#compareKey(inputValue)
+    const allSuggestions = [
+      ...commandSuggestions,
+      ...searchSuggestions.slice(
+        0,
+        Math.max(0, CONFIG.suggestionLimit - commandSuggestions.length)
+      ),
+    ];
+
+    this.#renderSuggestions(allSuggestions, value);
+  }
+
+  #findMatchingCommands(value, workspaceCommands) {
+    const lowerValue = value.toLowerCase();
+    const matches = [];
+
+    for (const [key, command] of workspaceCommands.entries()) {
+      const keyLower = key.toLowerCase();
+      const nameLower = command.name.toLowerCase();
+
+      if (keyLower === lowerValue || nameLower === lowerValue) {
+        matches.unshift({
+          type: 'command',
+          key,
+          name: command.name,
+          url: command.url,
+          searchTemplate: command.searchTemplate,
+          exact: true,
+        });
+      } else if (
+        keyLower.startsWith(lowerValue) ||
+        nameLower.includes(lowerValue)
       ) {
-        this.#setLoading(false);
-        return;
+        matches.push({
+          type: 'command',
+          key,
+          name: command.name,
+          url: command.url,
+          searchTemplate: command.searchTemplate,
+          exact: false,
+        });
       }
+    }
 
-      suggestions = suggestions.concat(
-        parsedQuery.key
-          ? ddgSuggestions.map(
-              (s) => `${parsedQuery.key}${CONFIG.commandSearchDelimiter}${s}`
-            )
-          : ddgSuggestions
+    return matches;
+  }
+
+  #extractQuery(value) {
+    const delimiterIndex = value.indexOf(CONFIG.commandSearchDelimiter);
+    if (delimiterIndex === -1) return value;
+    return value.slice(delimiterIndex + 1).trim();
+  }
+
+  async #fetchDuckDuckGoSuggestions(query) {
+    if (!query) return [];
+
+    try {
+      this.#setLoading(true);
+      const response = await fetch(
+        `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`
       );
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      return (data[1] || []).map((suggestion) => ({
+        type: 'search',
+        query: suggestion,
+      }));
+    } catch (error) {
+      console.warn('Failed to fetch suggestions:', error);
+      return [];
+    } finally {
       this.#setLoading(false);
     }
-
-    const filteredSuggestions = CONFIG.commandCaseSensitive
-      ? suggestions
-      : suggestions.filter((s) =>
-          Search.#compareKey(s).startsWith(
-            Search.#compareKey(parsedQuery.query)
-          )
-        );
-
-    this.#renderSuggestions(filteredSuggestions, parsedQuery.query);
   }
 
-  #onKeydown(e) {
-    if (!this.#dialog.open) {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-
-      if (Search.#isEditableTarget(e.target)) return;
-
-      if (e.key === '/') {
-        e.preventDefault();
-        this.#open('');
-        return;
-      }
-
-      if (!Search.#isPrintableKey(e)) return;
-
-      e.preventDefault();
-      this.#open(e.key);
-      return;
-    }
-
-    if (e.key === 'Escape') {
-      if (this.#input.value) {
-        this.#onClear();
-      } else {
-        this.#close();
-      }
-      return;
-    }
-
-    const modifierPrefixedKey = this.#getModifierPrefixedKey(e);
-
-    if (/^(ArrowDown|Tab|ctrl-n)$/.test(modifierPrefixedKey)) {
-      e.preventDefault();
-      this.#focusNextSuggestion();
-      return;
-    }
-
-    if (/^(ArrowUp|ctrl-p|shift-Tab)$/.test(modifierPrefixedKey)) {
-      e.preventDefault();
-      this.#focusNextSuggestion(true);
-    }
-  }
-
-  #getModifierPrefixedKey(e) {
-    const alt = e.altKey ? 'alt-' : '';
-    const ctrl = e.ctrlKey ? 'ctrl-' : '';
-    const meta = e.metaKey ? 'meta-' : '';
-    const shift = e.shiftKey ? 'shift-' : '';
-    return `${alt}${ctrl}${meta}${shift}${e.key}`;
-  }
-
-  #onClear() {
-    this.#input.value = '';
-    this.#updateClearBtn();
-    this.#suggestions.replaceChildren();
-    this.#input.focus();
-  }
-
-  #onSubmit() {
-    this.#execute(this.#input.value);
-  }
-
-  #onSuggestionClick(e) {
-    const ref = e.target.closest('.suggestion');
-    if (!ref) return;
-    this.#execute(ref.dataset.suggestion);
-  }
-
-  #renderSuggestions(suggestions, query) {
-    this.#suggestions.replaceChildren();
+  #renderSuggestions(suggestions, inputValue) {
+    this.#clearSuggestions();
+    if (suggestions.length === 0) return;
 
     const fragment = document.createDocumentFragment();
-    suggestions
-      .slice(0, CONFIG.suggestionLimit)
-      .forEach((suggestion, index) => {
-        const clone = suggestionTemplate.content.cloneNode(true);
-        const ref = clone.querySelector('.suggestion');
-        ref.dataset.index = index;
-        ref.dataset.suggestion = suggestion;
 
-        const compareQuery = Search.#compareKey(query);
-        const compareSuggestion = Search.#compareKey(suggestion);
-        const matchIndex = compareSuggestion.indexOf(compareQuery);
+    suggestions.forEach((suggestion) => {
+      const clone = suggestionTemplate.content.cloneNode(true);
+      const button = clone.querySelector('.suggestion');
+      button.dataset.type = suggestion.type;
 
-        if (matchIndex !== -1) {
-          const pre = suggestion.slice(0, matchIndex);
-          const match = suggestion.slice(matchIndex, matchIndex + query.length);
-          const post = suggestion.slice(matchIndex + query.length);
-
-          const matchClone = matchTemplate.content.cloneNode(true);
-          const matchRef = matchClone.querySelector('.match');
-          matchRef.textContent = match;
-
-          ref.append(
-            document.createTextNode(pre),
-            matchClone,
-            document.createTextNode(post)
-          );
-        } else {
-          ref.textContent = suggestion;
+      if (suggestion.type === 'command') {
+        button.dataset.key = suggestion.key;
+        button.dataset.url = suggestion.url;
+        if (suggestion.searchTemplate) {
+          button.dataset.searchTemplate = suggestion.searchTemplate;
         }
+        button.innerHTML = `<span class="key">${suggestion.key}</span> ${this.#highlightMatch(suggestion.name, inputValue)}`;
+      } else {
+        button.dataset.query = suggestion.query;
+        button.textContent = suggestion.query;
+      }
 
-        fragment.appendChild(clone);
-      });
+      fragment.appendChild(clone);
+    });
 
     this.#suggestions.appendChild(fragment);
+  }
+
+  #highlightMatch(text, query) {
+    const lowerText = text.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerText.indexOf(lowerQuery);
+
+    if (index === -1 || !query) return text;
+
+    const before = text.slice(0, index);
+    const match = text.slice(index, index + query.length);
+    const after = text.slice(index + query.length);
+
+    const matchSpan = matchTemplate.content
+      .cloneNode(true)
+      .querySelector('.match');
+    matchSpan.textContent = match;
+
+    return `${before}${matchSpan.outerHTML}${after}`;
+  }
+
+  #selectSuggestion(suggestion) {
+    const type = suggestion.dataset.type;
+
+    if (type === 'command') {
+      const key = suggestion.dataset.key;
+      const url = suggestion.dataset.url;
+      UsageTracker.recordUsage(key);
+      this.#navigateTo(url);
+    } else {
+      const query = suggestion.dataset.query;
+      this.#executeSearch(query);
+    }
+  }
+
+  #executeSearch(value) {
+    if (!value) return;
+
+    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
+      this.#activeWorkspaceId
+    );
+    const searchDelimiterIndex = value.indexOf(CONFIG.commandSearchDelimiter);
+
+    if (searchDelimiterIndex !== -1) {
+      const key = value.slice(0, searchDelimiterIndex).trim();
+      const query = value.slice(searchDelimiterIndex + 1).trim();
+      const command = workspaceCommands.get(
+        CONFIG.commandCaseSensitive ? key : key.toUpperCase()
+      );
+
+      if (command && command.searchTemplate) {
+        UsageTracker.recordUsage(
+          CONFIG.commandCaseSensitive ? key : key.toUpperCase()
+        );
+        this.#navigateTo(
+          command.url +
+            command.searchTemplate.replace('{}', encodeURIComponent(query))
+        );
+        return;
+      }
+    }
+
+    const pathDelimiterIndex = value.indexOf(CONFIG.commandPathDelimiter);
+    if (pathDelimiterIndex !== -1) {
+      const key = value.slice(0, pathDelimiterIndex).trim();
+      const path = value.slice(pathDelimiterIndex + 1).trim();
+      const command = workspaceCommands.get(
+        CONFIG.commandCaseSensitive ? key : key.toUpperCase()
+      );
+
+      if (command && command.url) {
+        UsageTracker.recordUsage(
+          CONFIG.commandCaseSensitive ? key : key.toUpperCase()
+        );
+        const separator = command.url.endsWith('/') ? '' : '/';
+        this.#navigateTo(`${command.url}${separator}${path}`);
+        return;
+      }
+    }
+
+    const directCommand = workspaceCommands.get(
+      CONFIG.commandCaseSensitive ? value : value.toUpperCase()
+    );
+    if (directCommand) {
+      UsageTracker.recordUsage(
+        CONFIG.commandCaseSensitive ? value : value.toUpperCase()
+      );
+      this.#navigateTo(directCommand.url);
+      return;
+    }
+
+    if (this.#isUrl(value)) {
+      this.#navigateTo(value.startsWith('http') ? value : `https://${value}`);
+      return;
+    }
+
+    this.#navigateTo(
+      CONFIG.defaultSearchTemplate.replace('{}', encodeURIComponent(value))
+    );
+  }
+
+  #isUrl(value) {
+    return /^(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i.test(
+      value
+    );
+  }
+
+  #navigateTo(url) {
+    this.#close();
+    if (CONFIG.openLinksInNewTab) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
   }
 }
 

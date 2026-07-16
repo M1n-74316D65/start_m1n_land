@@ -2,6 +2,8 @@ import { workspaceManager } from '../lib/WorkspaceManager.js';
 import { UsageTracker } from '../lib/UsageTracker.js';
 import { CONFIG } from '../config.js';
 
+const WIDE_TILE_COUNT = 2;
+
 const commandsTemplate = document.createElement('template');
 commandsTemplate.innerHTML = `
   <style>
@@ -21,23 +23,27 @@ commandsTemplate.innerHTML = `
 
     .commands {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
       gap: 1px;
       list-style: none;
       margin: 0;
       padding: 0;
       width: 100%;
-      background: var(--color-border-subtle);
-      border-radius: var(--key-radius);
-      overflow: hidden;
+      background: transparent;
+      border: 1px solid var(--color-border);
       opacity: 0;
-      transform: translateY(3px);
+      transform: translateY(2px);
       animation: gridFadeIn var(--duration-slow) var(--ease-out) forwards;
       transition: opacity var(--duration-normal) var(--ease-out);
     }
 
+    .commands > li {
+      background: var(--color-border);
+      min-width: 0;
+    }
+
     .commands.switching {
-      opacity: 0.6;
+      opacity: 0.55;
     }
 
     @keyframes gridFadeIn {
@@ -53,46 +59,62 @@ commandsTemplate.innerHTML = `
 
     .command {
       display: flex;
-      gap: var(--space-sm);
+      gap: 0;
       outline: 0;
-      padding: var(--space-sm) var(--space-md);
+      padding: 0;
       position: relative;
       text-decoration: none;
-      min-height: 2.35rem;
+      min-height: 2.25rem;
       min-width: 0;
+      width: 100%;
+      height: 100%;
       align-items: center;
-      background: var(--color-surface-elevated);
+      background: var(--color-surface);
       border: none;
       border-radius: 0;
-      transition: background var(--duration-normal) var(--ease-out);
+      transition:
+        background var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
     }
 
-    .command-wide {
-      grid-column: span 2;
+    .command.wide {
+      min-height: 2.55rem;
+    }
+
+    .command.wide .key {
+      background: var(--color-accent-glow);
     }
 
     .command:hover {
-      color: var(--color-text);
-      background: var(--color-focus);
+      color: var(--color-background);
+      background: var(--color-accent);
       z-index: 1;
     }
 
     .command:focus-visible {
       outline: none;
-      background: var(--color-accent-subtle);
-      box-shadow: inset 0 0 0 1px var(--color-accent);
+      background: var(--color-accent);
+      color: var(--color-background);
+      box-shadow: inset 0 0 0 1px var(--color-accent-hover);
       z-index: 1;
     }
 
     .command:active {
-      background: var(--color-accent-subtle);
+      background: var(--color-accent-hover);
+      transform: translateY(1px);
     }
 
     .command:hover .key,
     .command:focus-visible .key {
-      background: var(--color-accent);
+      background: transparent;
       color: var(--color-background);
-      border-color: var(--color-accent);
+      border-color: color-mix(in srgb, var(--color-background) 35%, transparent);
+    }
+
+    .command:hover .name,
+    .command:focus-visible .name {
+      color: var(--color-background);
     }
 
     .key {
@@ -100,18 +122,19 @@ commandsTemplate.innerHTML = `
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 1.45rem;
-      height: 1.45rem;
+      width: 2.15rem;
+      height: 100%;
+      min-height: 2.25rem;
       font-weight: var(--font-weight-bold);
-      font-size: 0.65rem;
-      letter-spacing: 0;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
       background: var(--color-accent-subtle);
-      border: none;
-      border-radius: var(--key-radius);
+      border-right: 1px solid var(--color-border);
       flex-shrink: 0;
       transition:
-        background var(--duration-normal) var(--ease-out),
-        color var(--duration-normal) var(--ease-out);
+        background var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
     }
 
     .name {
@@ -123,15 +146,18 @@ commandsTemplate.innerHTML = `
       text-overflow: ellipsis;
       min-width: 0;
       flex: 1;
+      padding: 0 var(--space-md);
       font-weight: var(--font-weight-normal);
       font-family: var(--font-family-mono);
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+
+    .command.wide .name {
+      font-size: 0.76rem;
+      letter-spacing: 0.015em;
     }
 
     @media (max-width: 599px) {
-      .command-wide {
-        grid-column: span 1;
-      }
-
       .commands {
         grid-template-columns: 1fr;
       }
@@ -146,6 +172,10 @@ commandsTemplate.innerHTML = `
 
       .commands.switching {
         opacity: 1;
+      }
+
+      .command:active {
+        transform: none;
       }
     }
   </style>
@@ -180,17 +210,6 @@ export class Commands extends HTMLElement {
 
   connectedCallback() {
     this.render();
-  }
-
-  #getWideCommandKeys() {
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
-    const commandKeys = Array.from(workspaceCommands.keys());
-    const recent = UsageTracker.getRecentCommands(commandKeys, 4);
-    const frequent = UsageTracker.getFrequentCommands(commandKeys, 4);
-    const items = recent.length > 0 ? recent : frequent;
-    return new Set(items.slice(0, 2).map(({ commandKey }) => commandKey));
   }
 
   #initializeEventListeners() {
@@ -249,29 +268,81 @@ export class Commands extends HTMLElement {
     });
   }
 
+  /** Top N keys: recent first, fill with frequent. */
+  #getWideKeys(commandKeys) {
+    const wide = [];
+    const seen = new Set();
+
+    for (const { commandKey } of UsageTracker.getRecentCommands(
+      commandKeys,
+      WIDE_TILE_COUNT
+    )) {
+      if (!seen.has(commandKey)) {
+        wide.push(commandKey);
+        seen.add(commandKey);
+      }
+    }
+
+    if (wide.length < WIDE_TILE_COUNT) {
+      for (const { commandKey } of UsageTracker.getFrequentCommands(
+        commandKeys,
+        WIDE_TILE_COUNT * 2
+      )) {
+        if (!seen.has(commandKey)) {
+          wide.push(commandKey);
+          seen.add(commandKey);
+          if (wide.length >= WIDE_TILE_COUNT) break;
+        }
+      }
+    }
+
+    return wide;
+  }
+
   createCommandsFragment() {
     const fragment = document.createDocumentFragment();
     const workspaceCommands = workspaceManager.getCommandsForWorkspace(
       this.#activeWorkspaceId
     );
-    const wideKeys = this.#getWideCommandKeys();
 
-    for (const [key, { name, url }] of workspaceCommands.entries()) {
-      if (!name || !url) continue;
-      const commandClone = this.createCommandElement(key, name, url, wideKeys);
+    const entries = [];
+    for (const [key, command] of workspaceCommands.entries()) {
+      if (!command.name || !command.url) continue;
+      entries.push([key, command]);
+    }
+
+    const keys = entries.map(([key]) => key);
+    const wideKeys = this.#getWideKeys(keys);
+    const wideSet = new Set(wideKeys);
+
+    const ordered = [
+      ...wideKeys
+        .map((key) => entries.find(([k]) => k === key))
+        .filter(Boolean),
+      ...entries.filter(([key]) => !wideSet.has(key)),
+    ];
+
+    for (const [key, { name, url }] of ordered) {
+      const commandClone = this.createCommandElement(
+        key,
+        name,
+        url,
+        wideSet.has(key)
+      );
       fragment.appendChild(commandClone);
     }
     return fragment;
   }
 
-  createCommandElement(key, name, url, wideKeys) {
+  createCommandElement(key, name, url, isWide = false) {
     const clone = commandTemplate.content.cloneNode(true);
     const command = clone.querySelector('.command');
     command.href = url;
-    if (wideKeys.has(key)) {
-      command.classList.add('command-wide');
-    }
     if (CONFIG.openLinksInNewTab) command.target = '_blank';
+    if (isWide) {
+      command.classList.add('wide');
+      command.setAttribute('data-featured', 'true');
+    }
     command.addEventListener('click', () => {
       UsageTracker.recordUsage(key);
     });
