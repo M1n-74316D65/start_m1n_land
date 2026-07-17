@@ -6,16 +6,16 @@ export const PWA_TOKENS = {
   version: '2.0.0',
   colors: {
     dark: {
-      background: '#060706',
-      theme: '#060706',
-      surface: '#0b0c0b',
+      background: '#050605',
+      theme: '#050605',
+      surface: '#0a0b0a',
       accent: '#d4a82b',
     },
     light: {
-      background: '#e7e8e7',
-      theme: '#e7e8e7',
-      surface: '#f1f2f1',
-      accent: '#a07d1a',
+      background: '#e6e7e6',
+      theme: '#e6e7e6',
+      surface: '#f0f1f0',
+      accent: '#9a7818',
     },
   },
 };

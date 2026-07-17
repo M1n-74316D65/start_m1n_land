@@ -11,7 +11,7 @@ clockTemplate.innerHTML = `
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      gap: 0 var(--space-xl);
+      gap: 0.35rem var(--space-xl);
       text-align: left;
       min-width: 0;
       max-width: 100%;
@@ -20,10 +20,10 @@ clockTemplate.innerHTML = `
     .time {
       color: var(--color-text);
       font-family: var(--font-family-display);
-      font-size: clamp(3.4rem, 12vw, 5.75rem);
+      font-size: clamp(3.6rem, 13vw, 6.25rem);
       font-weight: var(--font-weight-display);
-      letter-spacing: -0.045em;
-      line-height: 0.92;
+      letter-spacing: -0.05em;
+      line-height: 0.9;
       font-variant-numeric: tabular-nums;
       max-width: 100%;
     }
@@ -31,7 +31,7 @@ clockTemplate.innerHTML = `
     .time .colon {
       color: var(--color-accent);
       margin: 0 0.01em;
-      opacity: 0.9;
+      opacity: 0.95;
       font-weight: var(--font-weight-normal);
     }
 
@@ -39,13 +39,13 @@ clockTemplate.innerHTML = `
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.35rem;
+      gap: 0.3rem;
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
-      font-size: 0.72rem;
+      font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
       letter-spacing: 0.02em;
-      padding-bottom: 0.55rem;
+      padding-bottom: 0.45rem;
       min-width: 0;
     }
 

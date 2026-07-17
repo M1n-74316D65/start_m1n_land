@@ -42,9 +42,9 @@ searchTemplate.innerHTML = `
     }
 
     .dialog::backdrop {
-      background: color-mix(in srgb, var(--color-background) 88%, transparent);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: color-mix(in srgb, var(--color-background) 90%, transparent);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       opacity: 0;
       transition: opacity var(--duration-normal) var(--ease-out);
     }
@@ -82,7 +82,7 @@ searchTemplate.innerHTML = `
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 0;
-      box-shadow: 0 12px 40px color-mix(in srgb, var(--color-background) 65%, transparent);
+      box-shadow: var(--shadow-panel);
       overflow: hidden;
     }
 
@@ -91,7 +91,7 @@ searchTemplate.innerHTML = `
       align-items: center;
       justify-content: space-between;
       gap: var(--space-sm);
-      padding: 0.55rem var(--space-lg);
+      padding: 0.5rem var(--space-lg);
       border-bottom: 1px solid var(--color-border);
       background: var(--color-surface-elevated);
     }
@@ -99,9 +99,13 @@ searchTemplate.innerHTML = `
     .search-panel-label {
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.04em;
+      font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-label);
       text-transform: uppercase;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .search-workspace {
@@ -118,7 +122,8 @@ searchTemplate.innerHTML = `
       gap: 0.3rem;
       color: var(--color-text-muted);
       font-family: var(--font-family-mono);
-      font-size: 0.62rem;
+      font-size: 0.6rem;
+      flex-shrink: 0;
     }
 
     .search-panel-hint kbd {
@@ -132,8 +137,45 @@ searchTemplate.innerHTML = `
       background: var(--color-focus);
       color: var(--color-text-subtle);
       font-family: inherit;
-      font-size: 0.58rem;
+      font-size: 0.56rem;
       line-height: 1.3;
+    }
+
+    .search-mode {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.45rem var(--space-lg);
+      border-bottom: 1px solid var(--color-border-subtle);
+      background: var(--color-surface);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.02em;
+      color: var(--color-text-muted);
+      min-height: 1.75rem;
+      box-sizing: border-box;
+    }
+
+    .search-mode[data-kind='go'],
+    .search-mode[data-kind='search-cmd'],
+    .search-mode[data-kind='path'] {
+      color: var(--color-text-subtle);
+    }
+
+    .search-mode-kind {
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-label);
+      flex-shrink: 0;
+    }
+
+    .search-mode-detail {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--color-text);
     }
 
     .input-container {
@@ -259,8 +301,8 @@ searchTemplate.innerHTML = `
       color: var(--color-text-subtle);
       cursor: pointer;
       font-family: var(--font-family-mono);
-      font-size: 0.75rem;
-      padding: 0.5rem var(--space-lg);
+      font-size: var(--font-size-sm);
+      padding: 0.55rem var(--space-lg);
       width: 100%;
       box-sizing: border-box;
       text-align: left;
@@ -302,6 +344,14 @@ searchTemplate.innerHTML = `
       background: var(--color-accent-subtle);
     }
 
+    .suggestion .key {
+      display: inline-block;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-bold);
+      min-width: 1.1rem;
+      margin-right: 0.35rem;
+    }
+
     .match {
       color: var(--color-accent);
       font-weight: var(--font-weight-bold);
@@ -313,6 +363,10 @@ searchTemplate.innerHTML = `
         <div class="search-panel-header">
           <span class="search-panel-label">Search <span class="search-workspace"></span></span>
           <span class="search-panel-hint"><kbd>esc</kbd> close</span>
+        </div>
+        <div class="search-mode" data-kind="idle" aria-live="polite">
+          <span class="search-mode-kind"></span>
+          <span class="search-mode-detail"></span>
         </div>
         <div class="input-container">
           <input
@@ -351,6 +405,9 @@ export class Search extends HTMLElement {
   #clearBtn;
   #spinner;
   #workspaceLabel;
+  #modeEl;
+  #modeKind;
+  #modeDetail;
   #activeWorkspaceId;
   #previousFocus;
   #isLoading = false;
@@ -370,8 +427,12 @@ export class Search extends HTMLElement {
     this.#clearBtn = this.shadowRoot.querySelector('.clear-btn');
     this.#spinner = this.shadowRoot.querySelector('.spinner');
     this.#workspaceLabel = this.shadowRoot.querySelector('.search-workspace');
+    this.#modeEl = this.shadowRoot.querySelector('.search-mode');
+    this.#modeKind = this.shadowRoot.querySelector('.search-mode-kind');
+    this.#modeDetail = this.shadowRoot.querySelector('.search-mode-detail');
     this.#activeWorkspaceId = workspaceManager.activeWorkspaceId;
     this.#updateWorkspaceLabel();
+    this.#updateModeFeedback('');
     this.#initializeEventListeners();
   }
 
@@ -435,6 +496,7 @@ export class Search extends HTMLElement {
       this.#input.focus();
       this.#clearSuggestions();
       this.#updateClearButton();
+      this.#updateModeFeedback('');
     });
 
     this.#suggestions.addEventListener('click', (e) => {
@@ -448,6 +510,7 @@ export class Search extends HTMLElement {
     this.#boundWorkspaceChange = (e) => {
       this.#activeWorkspaceId = e.detail.workspaceId;
       this.#updateWorkspaceLabel();
+      this.#updateModeFeedback(this.#input.value.trim());
     };
     window.addEventListener('workspacechange', this.#boundWorkspaceChange);
   }
@@ -457,8 +520,87 @@ export class Search extends HTMLElement {
     this.#workspaceLabel.textContent = workspace ? `// ${workspace.name}` : '';
   }
 
+  #normalizeKey(key) {
+    return CONFIG.commandCaseSensitive ? key : key.toUpperCase();
+  }
+
+  #workspaceCommands() {
+    return workspaceManager.getCommandsForWorkspace(this.#activeWorkspaceId);
+  }
+
+  /** Preview of what Enter will do — mirrors #executeSearch resolution. */
+  #resolveMode(value) {
+    if (!value) {
+      return { kind: 'idle', label: 'type', detail: 'command, url, or query' };
+    }
+
+    const commands = this.#workspaceCommands();
+    const searchDelimiterIndex = value.indexOf(CONFIG.commandSearchDelimiter);
+
+    if (searchDelimiterIndex !== -1) {
+      const key = value.slice(0, searchDelimiterIndex).trim();
+      const query = value.slice(searchDelimiterIndex + 1).trim();
+      const command = commands.get(this.#normalizeKey(key));
+      if (command?.searchTemplate && query) {
+        return {
+          kind: 'search-cmd',
+          label: 'search',
+          detail: `${command.name} · ${query}`,
+        };
+      }
+    }
+
+    const pathDelimiterIndex = value.indexOf(CONFIG.commandPathDelimiter);
+    if (pathDelimiterIndex !== -1 && searchDelimiterIndex === -1) {
+      const key = value.slice(0, pathDelimiterIndex).trim();
+      const path = value.slice(pathDelimiterIndex + 1).trim();
+      const command = commands.get(this.#normalizeKey(key));
+      if (command?.url && path) {
+        return {
+          kind: 'path',
+          label: 'path',
+          detail: `${command.name} / ${path}`,
+        };
+      }
+    }
+
+    const directCommand = commands.get(this.#normalizeKey(value));
+    if (directCommand) {
+      return {
+        kind: 'go',
+        label: 'go',
+        detail: directCommand.name,
+      };
+    }
+
+    if (this.#isUrl(value)) {
+      return {
+        kind: 'url',
+        label: 'open',
+        detail: value.startsWith('http') ? value : `https://${value}`,
+      };
+    }
+
+    return {
+      kind: 'search',
+      label: 'search',
+      detail: value,
+    };
+  }
+
+  #updateModeFeedback(value) {
+    const mode = this.#resolveMode(value);
+    this.#modeEl.dataset.kind = mode.kind;
+    this.#modeKind.textContent = mode.label;
+    this.#modeDetail.textContent = mode.detail;
+  }
+
   #handleGlobalKeyDown(event) {
-    if (event.key === '/' && !this.#isInputElement(event.target)) {
+    // Dialog open: ignore. Shadow retargeting makes event.target the host, not the input.
+    if (this.#dialog.open) return;
+    if (this.#isEditableTarget(event)) return;
+
+    if (event.key === '/') {
       event.preventDefault();
       this.#open('');
       return;
@@ -468,18 +610,28 @@ export class Search extends HTMLElement {
       event.key.length === 1 &&
       !event.ctrlKey &&
       !event.metaKey &&
-      !event.altKey &&
-      !this.#isInputElement(event.target)
+      !event.altKey
     ) {
       event.preventDefault();
       this.#open(event.key);
     }
   }
 
-  #isInputElement(element) {
-    const tagName = element.tagName.toLowerCase();
+  #isEditableTarget(event) {
+    const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+    for (const el of path) {
+      if (!el || el.nodeType !== 1) continue;
+      const tag = el.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || el.isContentEditable) {
+        return true;
+      }
+    }
+    const t = event.target;
+    if (!t || !t.tagName) return false;
     return (
-      tagName === 'input' || tagName === 'textarea' || element.isContentEditable
+      t.tagName === 'INPUT' ||
+      t.tagName === 'TEXTAREA' ||
+      t.isContentEditable
     );
   }
 
@@ -490,6 +642,7 @@ export class Search extends HTMLElement {
     this.#input.value = initialValue;
     this.#input.focus();
     this.#updateClearButton();
+    this.#updateModeFeedback(initialValue.trim());
     if (initialValue) {
       this.#handleInput();
     } else {
@@ -505,6 +658,7 @@ export class Search extends HTMLElement {
   #handleInput() {
     const value = this.#input.value.trim();
     this.#updateClearButton();
+    this.#updateModeFeedback(value);
 
     if (!value) {
       this.#clearSuggestions();
@@ -516,7 +670,7 @@ export class Search extends HTMLElement {
 
   #updateClearButton() {
     const hasValue = this.#input.value.length > 0;
-    this.#clearBtn.toggleAttribute('visible', hasValue);
+    this.#clearBtn.toggleAttribute('visible', hasValue && !this.#isLoading);
   }
 
   #handleKeyDown(event) {
@@ -529,7 +683,7 @@ export class Search extends HTMLElement {
     if (event.key === 'Enter') {
       event.preventDefault();
       const activeSuggestion = this.#suggestions.querySelector(
-        '.suggestion:focus-visible'
+        '.suggestion:focus-visible, .suggestion:focus'
       );
       if (activeSuggestion) {
         this.#selectSuggestion(activeSuggestion);
@@ -552,7 +706,7 @@ export class Search extends HTMLElement {
     if (suggestions.length === 0) return;
 
     const activeIndex = suggestions.findIndex(
-      (s) => s === document.activeElement
+      (s) => s === this.shadowRoot.activeElement || s === document.activeElement
     );
     let nextIndex;
 
@@ -574,12 +728,11 @@ export class Search extends HTMLElement {
   #setLoading(isLoading) {
     this.#isLoading = isLoading;
     this.#spinner.toggleAttribute('visible', isLoading);
+    this.#updateClearButton();
   }
 
   async #fetchSuggestions(value) {
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
+    const workspaceCommands = this.#workspaceCommands();
     const matchingCommands = this.#findMatchingCommands(
       value,
       workspaceCommands
@@ -733,22 +886,17 @@ export class Search extends HTMLElement {
   #executeSearch(value) {
     if (!value) return;
 
-    const workspaceCommands = workspaceManager.getCommandsForWorkspace(
-      this.#activeWorkspaceId
-    );
+    const workspaceCommands = this.#workspaceCommands();
     const searchDelimiterIndex = value.indexOf(CONFIG.commandSearchDelimiter);
 
     if (searchDelimiterIndex !== -1) {
       const key = value.slice(0, searchDelimiterIndex).trim();
       const query = value.slice(searchDelimiterIndex + 1).trim();
-      const command = workspaceCommands.get(
-        CONFIG.commandCaseSensitive ? key : key.toUpperCase()
-      );
+      const normKey = this.#normalizeKey(key);
+      const command = workspaceCommands.get(normKey);
 
       if (command && command.searchTemplate) {
-        UsageTracker.recordUsage(
-          CONFIG.commandCaseSensitive ? key : key.toUpperCase()
-        );
+        UsageTracker.recordUsage(normKey);
         this.#navigateTo(
           command.url +
             command.searchTemplate.replace('{}', encodeURIComponent(query))
@@ -761,27 +909,21 @@ export class Search extends HTMLElement {
     if (pathDelimiterIndex !== -1) {
       const key = value.slice(0, pathDelimiterIndex).trim();
       const path = value.slice(pathDelimiterIndex + 1).trim();
-      const command = workspaceCommands.get(
-        CONFIG.commandCaseSensitive ? key : key.toUpperCase()
-      );
+      const normKey = this.#normalizeKey(key);
+      const command = workspaceCommands.get(normKey);
 
       if (command && command.url) {
-        UsageTracker.recordUsage(
-          CONFIG.commandCaseSensitive ? key : key.toUpperCase()
-        );
+        UsageTracker.recordUsage(normKey);
         const separator = command.url.endsWith('/') ? '' : '/';
         this.#navigateTo(`${command.url}${separator}${path}`);
         return;
       }
     }
 
-    const directCommand = workspaceCommands.get(
-      CONFIG.commandCaseSensitive ? value : value.toUpperCase()
-    );
+    const normValue = this.#normalizeKey(value);
+    const directCommand = workspaceCommands.get(normValue);
     if (directCommand) {
-      UsageTracker.recordUsage(
-        CONFIG.commandCaseSensitive ? value : value.toUpperCase()
-      );
+      UsageTracker.recordUsage(normValue);
       this.#navigateTo(directCommand.url);
       return;
     }

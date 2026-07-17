@@ -23,7 +23,7 @@ commandsTemplate.innerHTML = `
 
     .commands {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
       gap: 1px;
       list-style: none;
       margin: 0;
@@ -64,7 +64,7 @@ commandsTemplate.innerHTML = `
       padding: 0;
       position: relative;
       text-decoration: none;
-      min-height: 2.25rem;
+      min-height: 2.4rem;
       min-width: 0;
       width: 100%;
       height: 100%;
@@ -79,11 +79,23 @@ commandsTemplate.innerHTML = `
     }
 
     .command.wide {
-      min-height: 2.55rem;
+      min-height: 2.7rem;
+    }
+
+    .command.wide::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-accent);
     }
 
     .command.wide .key {
       background: var(--color-accent-glow);
+      width: 2.5rem;
+      font-size: 0.78rem;
     }
 
     .command:hover {
@@ -117,16 +129,21 @@ commandsTemplate.innerHTML = `
       color: var(--color-background);
     }
 
+    .command:hover.wide::before,
+    .command:focus-visible.wide::before {
+      background: var(--color-background);
+    }
+
     .key {
       color: var(--color-accent);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2.15rem;
+      width: 2.25rem;
       height: 100%;
-      min-height: 2.25rem;
+      min-height: 2.4rem;
       font-weight: var(--font-weight-bold);
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       letter-spacing: 0.04em;
       background: var(--color-accent-subtle);
       border-right: 1px solid var(--color-border);
@@ -140,7 +157,7 @@ commandsTemplate.innerHTML = `
     .name {
       color: var(--color-text);
       letter-spacing: 0.01em;
-      font-size: 0.72rem;
+      font-size: var(--font-size-sm);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -153,8 +170,14 @@ commandsTemplate.innerHTML = `
     }
 
     .command.wide .name {
-      font-size: 0.76rem;
-      letter-spacing: 0.015em;
+      font-size: var(--font-size-md);
+      letter-spacing: 0.01em;
+    }
+
+    @media (min-width: 600px) {
+      .commands > li.wide {
+        grid-column: span 2;
+      }
     }
 
     @media (max-width: 599px) {
@@ -336,10 +359,12 @@ export class Commands extends HTMLElement {
 
   createCommandElement(key, name, url, isWide = false) {
     const clone = commandTemplate.content.cloneNode(true);
+    const li = clone.querySelector('li');
     const command = clone.querySelector('.command');
     command.href = url;
     if (CONFIG.openLinksInNewTab) command.target = '_blank';
     if (isWide) {
+      li.classList.add('wide');
       command.classList.add('wide');
       command.setAttribute('data-featured', 'true');
     }
