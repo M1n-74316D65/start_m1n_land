@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     import('./components/Tabs.js'),
     import('./components/Commands.js'),
     import('./components/Search.js'),
+    import('./components/NewsFeed.js'),
   ];
 
   Promise.allSettled(components).then((results) => {

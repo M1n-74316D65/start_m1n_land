@@ -43,10 +43,14 @@ can use either. Install with `npm install` or `bun install`.
 
 Entry: `index.html` loads `/src/main.js`, which imports the three stylesheets
 (`src/styles/{fonts,variables,layout}.css`) and, on `DOMContentLoaded`,
-dynamically imports four Web Components: `Clock`, `Tabs`, `Commands`, `Search`.
-All components use Shadow DOM + `<template>` tags and are registered as custom
-elements (`<clock-component>`, `<tabs-component>`, `<commands-component>`,
-`<search-component>`).
+dynamically imports five Web Components: `Clock`, `Tabs`, `Commands`, `Search`,
+`NewsFeed`. All components use Shadow DOM + `<template>` tags and are
+registered as custom elements (`<clock-component>`, `<tabs-component>`,
+`<commands-component>`, `<search-component>`, `<newsfeed-component>`).
+
+- `src/components/NewsFeed.js` — Hacker News front-page list below the command
+  grid. Fetches the Algolia HN API (`hn.algolia.com/api/v1`, NetworkOnly in the
+  service worker), refreshes every 10 min, fails silently. Workspace-agnostic.
 
 - `src/config.js` — `CONFIG` (delimiters, default search = Brave,
   suggestionLimit, workspace storage key) and `COMMANDS` Map. **Add/edit

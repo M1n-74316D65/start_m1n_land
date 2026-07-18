@@ -69,6 +69,10 @@ export default {
         urlPattern: /^https:\/\/duckduckgo\.com/,
         handler: 'NetworkOnly',
       },
+      {
+        urlPattern: /^https:\/\/hn\.algolia\.com/,
+        handler: 'NetworkOnly',
+      },
     ],
   },
 };
