@@ -13,9 +13,7 @@ tabsTemplate.innerHTML = `
     .tabs-container {
       display: flex;
       align-items: center;
-      gap: 0;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      gap: var(--space-lg);
       width: auto;
       max-width: 100%;
     }
@@ -23,49 +21,33 @@ tabsTemplate.innerHTML = `
     .tab {
       background: transparent;
       border: none;
-      border-right: 1px solid var(--color-border);
       color: var(--color-text-muted);
       cursor: pointer;
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-normal);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      padding: 0.4rem 0.8rem;
+      padding: 0.25rem 0;
       min-width: 0;
       position: relative;
-      transition:
-        color var(--duration-normal) var(--ease-out),
-        background var(--duration-normal) var(--ease-out);
+      transition: color var(--duration-normal) var(--ease-out);
       outline: 0;
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 0.4rem;
-    }
-
-    .tab:last-child {
-      border-right: none;
     }
 
     .tab:hover {
       color: var(--color-text);
-      background: var(--color-focus);
     }
 
     .tab:focus-visible {
       outline: none;
-      background: var(--color-accent-subtle);
       box-shadow: inset 0 0 0 1px var(--color-accent);
       z-index: 1;
     }
 
-    .tab:active {
-      transform: none;
-    }
-
     .tab.active {
-      color: var(--color-accent);
-      background: var(--color-accent-subtle);
+      color: var(--color-text);
     }
 
     .tab.active::after {
@@ -79,23 +61,12 @@ tabsTemplate.innerHTML = `
     }
 
     .tab-key {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 0.85rem;
-      height: 0.85rem;
-      font-size: 0.5rem;
-      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xs);
       color: var(--color-text-muted);
-      opacity: 0.75;
-      border: 1px solid var(--color-border);
-      padding: 0 0.12rem;
     }
 
     .tab.active .tab-key {
       color: var(--color-accent);
-      border-color: var(--color-accent-dim);
-      opacity: 1;
     }
   </style>
   <nav class="tabs-container" role="tablist" aria-label="Workspaces"></nav>

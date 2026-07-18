@@ -24,13 +24,11 @@ commandsTemplate.innerHTML = `
     .commands {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-      gap: 1px;
+      gap: var(--space-xs);
       list-style: none;
       margin: 0;
       padding: 0;
       width: 100%;
-      background: transparent;
-      border: 1px solid var(--color-border);
       opacity: 0;
       transform: translateY(2px);
       animation: gridFadeIn var(--duration-slow) var(--ease-out) forwards;
@@ -38,7 +36,6 @@ commandsTemplate.innerHTML = `
     }
 
     .commands > li {
-      background: var(--color-border);
       min-width: 0;
     }
 
@@ -59,19 +56,19 @@ commandsTemplate.innerHTML = `
 
     .command {
       display: flex;
-      gap: 0;
+      align-items: center;
+      gap: var(--space-sm);
       outline: 0;
-      padding: 0;
       position: relative;
       text-decoration: none;
       min-height: 2.4rem;
       min-width: 0;
       width: 100%;
       height: 100%;
-      align-items: center;
+      padding: 0 var(--space-md);
+      box-sizing: border-box;
       background: var(--color-surface);
       border: none;
-      border-radius: 0;
       transition:
         background var(--duration-fast) var(--ease-out),
         color var(--duration-fast) var(--ease-out),
@@ -82,96 +79,44 @@ commandsTemplate.innerHTML = `
       min-height: 2.7rem;
     }
 
-    .command.wide::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--color-accent);
-    }
-
-    .command.wide .key {
-      background: var(--color-accent-glow);
-      width: 2.5rem;
-      font-size: 0.78rem;
-    }
-
     .command:hover {
-      color: var(--color-background);
-      background: var(--color-accent);
-      z-index: 1;
+      background: var(--color-focus);
     }
 
     .command:focus-visible {
       outline: none;
-      background: var(--color-accent);
-      color: var(--color-background);
-      box-shadow: inset 0 0 0 1px var(--color-accent-hover);
+      background: var(--color-focus);
+      box-shadow: inset 0 0 0 1px var(--color-accent);
       z-index: 1;
-    }
-
-    .command:active {
-      background: var(--color-accent-hover);
-      transform: translateY(1px);
     }
 
     .command:hover .key,
     .command:focus-visible .key {
-      background: transparent;
-      color: var(--color-background);
-      border-color: color-mix(in srgb, var(--color-background) 35%, transparent);
-    }
-
-    .command:hover .name,
-    .command:focus-visible .name {
-      color: var(--color-background);
-    }
-
-    .command:hover.wide::before,
-    .command:focus-visible.wide::before {
-      background: var(--color-background);
+      color: var(--color-accent);
     }
 
     .key {
-      color: var(--color-accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.25rem;
-      height: 100%;
-      min-height: 2.4rem;
+      color: var(--color-text-subtle);
       font-weight: var(--font-weight-bold);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      background: var(--color-accent-subtle);
-      border-right: 1px solid var(--color-border);
+      font-size: var(--font-size-xs);
       flex-shrink: 0;
-      transition:
-        background var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out),
-        border-color var(--duration-fast) var(--ease-out);
+      transition: color var(--duration-fast) var(--ease-out);
     }
 
     .name {
       color: var(--color-text);
-      letter-spacing: 0.01em;
       font-size: var(--font-size-sm);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 0;
       flex: 1;
-      padding: 0 var(--space-md);
       font-weight: var(--font-weight-normal);
       font-family: var(--font-family-mono);
-      transition: color var(--duration-fast) var(--ease-out);
     }
 
     .command.wide .name {
       font-size: var(--font-size-md);
-      letter-spacing: 0.01em;
     }
 
     @media (min-width: 600px) {
@@ -195,10 +140,6 @@ commandsTemplate.innerHTML = `
 
       .commands.switching {
         opacity: 1;
-      }
-
-      .command:active {
-        transform: none;
       }
     }
   </style>

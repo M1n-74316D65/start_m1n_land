@@ -37,28 +37,14 @@ clockTemplate.innerHTML = `
 
     .meta {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.3rem;
+      align-items: baseline;
+      gap: var(--space-sm);
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
-      letter-spacing: 0.02em;
       padding-bottom: 0.45rem;
       min-width: 0;
-    }
-
-    .meta-row {
-      display: flex;
-      align-items: baseline;
-      gap: var(--space-sm);
-    }
-
-    .meta-row::before {
-      content: '//';
-      color: var(--color-text-muted);
-      letter-spacing: 0.04em;
     }
 
     .greeting {
@@ -72,19 +58,14 @@ clockTemplate.innerHTML = `
     .seconds {
       color: var(--color-accent);
       font-variant-numeric: tabular-nums;
-      min-width: 1.2rem;
     }
   </style>
   <div class="clock-container">
     <time class="time"></time>
     <span class="meta">
-      <span class="meta-row">
-        <span class="greeting"></span>
-        <span class="date"></span>
-      </span>
-      <span class="meta-row">
-        <span class="seconds">00</span>
-      </span>
+      <span class="greeting"></span>
+      <span class="date"></span>
+      <span class="seconds">00</span>
     </span>
   </div>
 `;

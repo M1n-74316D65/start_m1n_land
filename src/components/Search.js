@@ -81,7 +81,6 @@ searchTemplate.innerHTML = `
     .search-panel {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-radius: 0;
       box-shadow: var(--shadow-panel);
       overflow: hidden;
     }
@@ -93,15 +92,12 @@ searchTemplate.innerHTML = `
       gap: var(--space-sm);
       padding: 0.5rem var(--space-lg);
       border-bottom: 1px solid var(--color-border);
-      background: var(--color-surface-elevated);
     }
 
     .search-panel-label {
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -109,10 +105,8 @@ searchTemplate.innerHTML = `
     }
 
     .search-workspace {
-      color: var(--color-accent);
+      color: var(--color-text);
       font-weight: var(--font-weight-bold);
-      letter-spacing: 0.02em;
-      text-transform: none;
       margin-left: 0.35rem;
     }
 
@@ -122,23 +116,13 @@ searchTemplate.innerHTML = `
       gap: 0.3rem;
       color: var(--color-text-muted);
       font-family: var(--font-family-mono);
-      font-size: 0.6rem;
+      font-size: var(--font-size-xs);
       flex-shrink: 0;
     }
 
     .search-panel-hint kbd {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 1.2rem;
-      padding: 0.05rem 0.3rem;
-      border: 1px solid var(--color-border);
-      border-radius: 0;
-      background: var(--color-focus);
-      color: var(--color-text-subtle);
       font-family: inherit;
-      font-size: 0.56rem;
-      line-height: 1.3;
+      color: var(--color-text-subtle);
     }
 
     .search-mode {
@@ -147,10 +131,8 @@ searchTemplate.innerHTML = `
       gap: var(--space-sm);
       padding: 0.45rem var(--space-lg);
       border-bottom: 1px solid var(--color-border-subtle);
-      background: var(--color-surface);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
-      letter-spacing: 0.02em;
       color: var(--color-text-muted);
       min-height: 1.75rem;
       box-sizing: border-box;
@@ -163,10 +145,8 @@ searchTemplate.innerHTML = `
     }
 
     .search-mode-kind {
-      color: var(--color-accent);
+      color: var(--color-text);
       font-weight: var(--font-weight-bold);
-      text-transform: uppercase;
-      letter-spacing: var(--letter-spacing-label);
       flex-shrink: 0;
     }
 
@@ -192,10 +172,8 @@ searchTemplate.innerHTML = `
       text-align: left;
       width: 100%;
       box-sizing: border-box;
-      letter-spacing: 0.01em;
       background: var(--color-focus);
       border: none;
-      border-radius: 0;
       box-shadow: inset 0 0 0 1px var(--color-border);
       transition:
         box-shadow var(--duration-normal) var(--ease-out),
@@ -222,7 +200,6 @@ searchTemplate.innerHTML = `
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0;
       color: var(--color-text-muted);
       background: transparent;
       cursor: pointer;
@@ -240,7 +217,7 @@ searchTemplate.innerHTML = `
     }
 
     .clear-btn:hover {
-      background: var(--color-accent-subtle);
+      background: var(--color-focus);
       color: var(--color-text);
     }
 
@@ -248,10 +225,6 @@ searchTemplate.innerHTML = `
       outline: none;
       box-shadow: inset 0 0 0 1px var(--color-accent);
       color: var(--color-text);
-    }
-
-    .clear-btn:active {
-      transform: translateY(-50%) scale(0.95);
     }
 
     .spinner {
@@ -293,8 +266,10 @@ searchTemplate.innerHTML = `
       list-style: none;
       margin: 0;
       padding: 0;
-      gap: 1px;
-      background: var(--color-border);
+    }
+
+    .suggestions li + li {
+      border-top: 1px solid var(--color-border-subtle);
     }
 
     .suggestion {
@@ -311,10 +286,8 @@ searchTemplate.innerHTML = `
       overflow: hidden;
       text-overflow: ellipsis;
       outline: 0;
-      background: var(--color-surface-elevated);
+      background: transparent;
       border: none;
-      border-radius: 0;
-      letter-spacing: 0.01em;
       opacity: 0;
       animation: suggestionIn var(--duration-normal) var(--ease-out) forwards;
       touch-action: manipulation;
@@ -341,19 +314,19 @@ searchTemplate.innerHTML = `
     }
 
     .suggestion:active {
-      background: var(--color-accent-subtle);
+      background: var(--color-focus);
     }
 
     .suggestion .key {
       display: inline-block;
-      color: var(--color-accent);
+      color: var(--color-text-subtle);
       font-weight: var(--font-weight-bold);
       min-width: 1.1rem;
       margin-right: 0.35rem;
     }
 
     .match {
-      color: var(--color-accent);
+      color: var(--color-text);
       font-weight: var(--font-weight-bold);
     }
   </style>
@@ -618,7 +591,8 @@ export class Search extends HTMLElement {
   }
 
   #isEditableTarget(event) {
-    const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+    const path =
+      typeof event.composedPath === 'function' ? event.composedPath() : [];
     for (const el of path) {
       if (!el || el.nodeType !== 1) continue;
       const tag = el.tagName;
@@ -629,9 +603,7 @@ export class Search extends HTMLElement {
     const t = event.target;
     if (!t || !t.tagName) return false;
     return (
-      t.tagName === 'INPUT' ||
-      t.tagName === 'TEXTAREA' ||
-      t.isContentEditable
+      t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable
     );
   }
 
