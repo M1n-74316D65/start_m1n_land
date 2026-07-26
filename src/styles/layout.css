@@ -24,7 +24,8 @@ body {
   flex-direction: column;
   width: 100%;
   min-height: 100dvh;
-  padding: var(--layout-inset-y) var(--layout-inset-x);
+  padding: clamp(1.25rem, 5vw, 3.5rem) var(--layout-inset-x)
+    var(--layout-inset-y);
   box-sizing: border-box;
 }
 
@@ -72,7 +73,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding: 0 0 var(--space-lg) 0;
+  padding: 0 0 var(--space-md) 0;
 }
 
 .zone-header tabs-component {
@@ -82,15 +83,15 @@ main {
 .zone-moment {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
-  padding: var(--space-xl) 0 var(--space-2xl) 0;
+  gap: var(--space-xl);
+  padding: var(--space-2xl) 0 3.5rem 0;
 }
 
 .zone-actions {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: var(--space-xl) 0 0 0;
+  padding: var(--space-lg) 0 0 0;
   border-top: 1px solid var(--color-border-subtle);
 }
 
@@ -108,8 +109,8 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: var(--space-xl) 0 0 0;
-  margin-top: var(--space-xl);
+  padding: var(--space-lg) 0 0 0;
+  margin-top: 3rem;
   border-top: 1px solid var(--color-border-subtle);
 }
 
@@ -133,7 +134,7 @@ search-component {
   gap: var(--space-sm);
   width: 100%;
   min-width: 0;
-  padding: 0.65rem var(--space-md);
+  padding: 0.8rem var(--space-md);
   border: 1px solid var(--color-border);
   background: transparent;
   color: var(--color-text-muted);
@@ -145,6 +146,7 @@ search-component {
     color var(--duration-normal) var(--ease-out),
     background var(--duration-normal) var(--ease-out),
     border-color var(--duration-normal) var(--ease-out);
+  box-shadow: inset 0 -2px 0 var(--color-border-subtle);
 }
 
 .search-affordance::before {
@@ -159,6 +161,7 @@ search-component {
   color: var(--color-text);
   background: var(--color-surface);
   outline: none;
+  box-shadow: inset 0 -2px 0 var(--color-accent);
 }
 
 .search-affordance:focus-visible {

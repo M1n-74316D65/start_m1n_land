@@ -121,7 +121,7 @@ newsTemplate.innerHTML = `
     }
   </style>
   <div class="news" hidden>
-    <p class="news-header">Hacker News</p>
+    <p class="news-header">From Hacker News</p>
     <ol class="stories"></ol>
   </div>
 `;

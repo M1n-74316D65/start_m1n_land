@@ -9,25 +9,20 @@
   --space: var(--space-md);
 
   /* Layout */
-  --layout-max: 48rem;
-  --layout-inset-x: var(--space-md);
-  --layout-inset-y: var(--space-2xl);
-
-  /* Layout */
-  --layout-max: 48rem;
+  --layout-max: 52rem;
   --layout-inset-x: var(--space-md);
   --layout-inset-y: var(--space-2xl);
 
   /* Colors */
   --color-background: #0f0f0f;
-  --color-surface: #161616;
-  --color-surface-elevated: #1c1c1c;
+  --color-surface: #171717;
+  --color-surface-elevated: #202020;
   --color-text-subtle: #8a8a8a;
   --color-text-muted: #5c5c5c;
   --color-text: #d6d6d6;
   --color-focus: #1a1a1a;
-  --color-border: #262626;
-  --color-border-subtle: #1e1e1e;
+  --color-border: #2d2d2d;
+  --color-border-subtle: #222222;
   --color-accent: #c24a2e;
   --color-accent-hover: #d95f40;
   --color-accent-dim: #96402a;
@@ -51,7 +46,7 @@
   --font-weight-normal: 400;
   --font-weight-display: 500;
   --letter-spacing: 0;
-  --letter-spacing-label: 0.06em;
+  --letter-spacing-label: 0.08em;
 
   /* Animation */
   --duration-fast: 80ms;
@@ -75,14 +70,14 @@
 @media (prefers-color-scheme: light) {
   :root {
     --color-background: #f5f3ee;
-    --color-surface: #faf8f4;
+  --color-surface: #fbfaf7;
     --color-surface-elevated: #ffffff;
     --color-text-subtle: #6b6b6b;
     --color-text-muted: #9a9a9a;
     --color-text: #191919;
     --color-focus: #eceae4;
-    --color-border: #ddd9d2;
-    --color-border-subtle: #e7e4de;
+    --color-border: #d5d1c9;
+    --color-border-subtle: #e4e1da;
     --color-accent: #a83c24;
     --color-accent-hover: #8a2f1b;
     --color-accent-dim: #bf4e33;

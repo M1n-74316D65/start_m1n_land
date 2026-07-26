@@ -24,7 +24,7 @@ commandsTemplate.innerHTML = `
     .commands {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-      gap: var(--space-xs);
+      gap: 2px;
       list-style: none;
       margin: 0;
       padding: 0;
@@ -61,11 +61,11 @@ commandsTemplate.innerHTML = `
       outline: 0;
       position: relative;
       text-decoration: none;
-      min-height: 2.4rem;
+      min-height: 2.65rem;
       min-width: 0;
       width: 100%;
       height: 100%;
-      padding: 0 var(--space-md);
+      padding: 0 var(--space-lg);
       box-sizing: border-box;
       background: var(--color-surface);
       border: none;
@@ -76,7 +76,8 @@ commandsTemplate.innerHTML = `
     }
 
     .command.wide {
-      min-height: 2.7rem;
+      min-height: 3.2rem;
+      background: var(--color-surface-elevated);
     }
 
     .command:hover {
@@ -98,6 +99,7 @@ commandsTemplate.innerHTML = `
     .key {
       color: var(--color-text-subtle);
       font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
       font-size: var(--font-size-xs);
       flex-shrink: 0;
       transition: color var(--duration-fast) var(--ease-out);
@@ -117,6 +119,7 @@ commandsTemplate.innerHTML = `
 
     .command.wide .name {
       font-size: var(--font-size-md);
+      font-weight: var(--font-weight-bold);
     }
 
     @media (min-width: 600px) {

@@ -11,7 +11,7 @@ clockTemplate.innerHTML = `
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      gap: 0.35rem var(--space-xl);
+      gap: 0.55rem var(--space-xl);
       text-align: left;
       min-width: 0;
       max-width: 100%;
@@ -20,7 +20,7 @@ clockTemplate.innerHTML = `
     .time {
       color: var(--color-text);
       font-family: var(--font-family-display);
-      font-size: clamp(3.6rem, 13vw, 6.25rem);
+      font-size: clamp(4.25rem, 16vw, 8rem);
       font-weight: var(--font-weight-display);
       letter-spacing: -0.05em;
       line-height: 0.9;
@@ -43,7 +43,7 @@ clockTemplate.innerHTML = `
       font-family: var(--font-family-mono);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
-      padding-bottom: 0.45rem;
+      padding-bottom: 0.65rem;
       min-width: 0;
     }
 

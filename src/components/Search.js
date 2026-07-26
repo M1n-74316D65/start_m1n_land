@@ -81,6 +81,7 @@ searchTemplate.innerHTML = `
     .search-panel {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-accent);
       box-shadow: var(--shadow-panel);
       overflow: hidden;
     }
@@ -334,7 +335,7 @@ searchTemplate.innerHTML = `
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
       <div class="search-panel">
         <div class="search-panel-header">
-          <span class="search-panel-label">Search <span class="search-workspace"></span></span>
+          <span class="search-panel-label">Command line <span class="search-workspace"></span></span>
           <span class="search-panel-hint"><kbd>esc</kbd> close</span>
         </div>
         <div class="search-mode" data-kind="idle" aria-live="polite">
@@ -347,7 +348,7 @@ searchTemplate.innerHTML = `
             aria-label="Search"
             title="search"
             type="text"
-            placeholder="Command, URL, or query"
+            placeholder="Type a command, URL, or query"
           />
           <button type="button" class="clear-btn" aria-label="Clear">×</button>
           <div class="spinner" aria-hidden="true"></div>

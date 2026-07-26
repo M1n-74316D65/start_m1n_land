@@ -13,7 +13,7 @@ tabsTemplate.innerHTML = `
     .tabs-container {
       display: flex;
       align-items: center;
-      gap: var(--space-lg);
+      gap: var(--space-xl);
       width: auto;
       max-width: 100%;
     }
@@ -56,7 +56,7 @@ tabsTemplate.innerHTML = `
       left: 0;
       right: 0;
       bottom: 0;
-      height: 1px;
+      height: 2px;
       background: var(--color-accent);
     }
 
