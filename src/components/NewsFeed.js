@@ -17,7 +17,7 @@ newsTemplate.innerHTML = `
     .news {
       display: flex;
       flex-direction: column;
-      gap: var(--space-md);
+      gap: 0;
       width: 100%;
       min-width: 0;
       opacity: 0;
@@ -36,21 +36,42 @@ newsTemplate.innerHTML = `
       }
     }
 
-    .news-header {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
-      margin: 0;
-    }
-
     .stories {
       display: flex;
       flex-direction: column;
       list-style: none;
       margin: 0;
       padding: 0;
+      counter-reset: story;
+      background: var(--color-border);
+      gap: 1px;
     }
 
     .story {
+      display: grid;
+      grid-template-columns: 2.25rem 1fr;
+      gap: 0;
+      min-width: 0;
+      background: var(--color-surface);
+      counter-increment: story;
+    }
+
+    .story::before {
+      content: counter(story, decimal-leading-zero);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--space-sm) 0;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
+      font-variant-numeric: tabular-nums;
+      border-right: 1px solid var(--color-border-subtle);
+      background: var(--color-background);
+    }
+
+    .story-body {
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -66,11 +87,11 @@ newsTemplate.innerHTML = `
       color: var(--color-text);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
+      letter-spacing: 0.02em;
       text-decoration: none;
       transition:
         background var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out),
-        box-shadow var(--duration-fast) var(--ease-out);
+        color var(--duration-fast) var(--ease-out);
     }
 
     .title:hover {
@@ -88,6 +109,8 @@ newsTemplate.innerHTML = `
     .meta {
       color: var(--color-text-muted);
       font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       padding: 0 var(--space-md) var(--space-sm);
       white-space: nowrap;
       overflow: hidden;
@@ -109,7 +132,11 @@ newsTemplate.innerHTML = `
     .news-empty {
       color: var(--color-text-muted);
       font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       margin: 0;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--color-surface);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -121,7 +148,6 @@ newsTemplate.innerHTML = `
     }
   </style>
   <div class="news" hidden>
-    <p class="news-header">From Hacker News</p>
     <ol class="stories"></ol>
   </div>
 `;
@@ -129,17 +155,19 @@ newsTemplate.innerHTML = `
 const storyTemplate = document.createElement('template');
 storyTemplate.innerHTML = `
   <li class="story">
-    <a class="title" rel="noopener noreferrer"></a>
-    <span class="meta"></span>
+    <div class="story-body">
+      <a class="title" rel="noopener noreferrer"></a>
+      <span class="meta"></span>
+    </div>
   </li>
 `;
 
 function formatAge(createdAtI) {
   const seconds = Math.max(0, Date.now() / 1000 - createdAtI);
   const hours = Math.floor(seconds / 3600);
-  if (hours >= 24) return `${Math.floor(hours / 24)}d`;
-  if (hours >= 1) return `${hours}h`;
-  return `${Math.max(1, Math.floor(seconds / 60))}m`;
+  if (hours >= 24) return `${Math.floor(hours / 24)}D`;
+  if (hours >= 1) return `${hours}H`;
+  return `${Math.max(1, Math.floor(seconds / 60))}M`;
 }
 
 export class NewsFeed extends HTMLElement {
@@ -228,7 +256,7 @@ export class NewsFeed extends HTMLElement {
           /* malformed url */
         }
       }
-      parts.push(`${hit.points ?? 0} points`);
+      parts.push(`${hit.points ?? 0} PTS`);
       parts.push(formatAge(hit.created_at_i));
       meta.innerText = parts.join(' · ');
 
@@ -252,7 +280,7 @@ export class NewsFeed extends HTMLElement {
     list.replaceChildren();
     const empty = document.createElement('p');
     empty.className = 'news-empty';
-    empty.innerText = "Couldn't load Hacker News";
+    empty.innerText = '[ ERR ] FEED UNAVAILABLE';
     list.appendChild(empty);
     news.hidden = false;
   }

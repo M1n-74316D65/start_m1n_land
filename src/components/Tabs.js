@@ -12,32 +12,44 @@ tabsTemplate.innerHTML = `
 
     .tabs-container {
       display: flex;
-      align-items: center;
-      gap: var(--space-xl);
-      width: auto;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
       max-width: 100%;
+      background: var(--color-border);
     }
 
     .tab {
-      background: transparent;
+      flex: 1;
+      background: var(--color-surface);
       border: none;
       color: var(--color-text-muted);
       cursor: pointer;
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-normal);
-      padding: 0.25rem 0;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+      padding: 0.65rem var(--space-md);
       min-width: 0;
       position: relative;
-      transition: color var(--duration-normal) var(--ease-out);
+      transition:
+        color var(--duration-normal) var(--ease-out),
+        background var(--duration-normal) var(--ease-out);
       outline: 0;
       display: flex;
       align-items: baseline;
-      gap: 0.4rem;
+      justify-content: center;
+      gap: 0.45rem;
+    }
+
+    .tab + .tab {
+      margin-left: 1px;
     }
 
     .tab:hover {
       color: var(--color-text);
+      background: var(--color-focus);
     }
 
     .tab:focus-visible {
@@ -48,6 +60,7 @@ tabsTemplate.innerHTML = `
 
     .tab.active {
       color: var(--color-text);
+      background: var(--color-background);
     }
 
     .tab.active::after {
@@ -65,8 +78,30 @@ tabsTemplate.innerHTML = `
       color: var(--color-text-muted);
     }
 
+    .tab-key::before {
+      content: '[';
+      color: var(--color-border);
+    }
+
+    .tab-key::after {
+      content: ']';
+      color: var(--color-border);
+    }
+
     .tab.active .tab-key {
       color: var(--color-accent);
+    }
+
+    .tab.active .tab-key::before,
+    .tab.active .tab-key::after {
+      color: var(--color-accent);
+    }
+
+    .tab-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   </style>
   <nav class="tabs-container" role="tablist" aria-label="Workspaces"></nav>

@@ -9,27 +9,28 @@
   --space: var(--space-md);
 
   /* Layout */
-  --layout-max: 52rem;
+  --layout-max: 54rem;
   --layout-inset-x: var(--space-md);
   --layout-inset-y: var(--space-2xl);
 
-  /* Colors */
-  --color-background: #0f0f0f;
-  --color-surface: #171717;
-  --color-surface-elevated: #202020;
+  /* Tactical Telemetry palette (dark CRT exclusive) */
+  --color-background: #0a0a0a;
+  --color-surface: #121212;
+  --color-surface-elevated: #1a1a1a;
   --color-text-subtle: #8a8a8a;
   --color-text-muted: #5c5c5c;
-  --color-text: #d6d6d6;
-  --color-focus: #1a1a1a;
-  --color-border: #2d2d2d;
-  --color-border-subtle: #222222;
-  --color-accent: #c24a2e;
-  --color-accent-hover: #d95f40;
-  --color-accent-dim: #96402a;
+  --color-text: #eaeaea;
+  --color-focus: #161616;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #1e1e1e;
+  --color-accent: #e61919;
+  --color-accent-hover: #ff2a2a;
+  --color-accent-dim: #a31212;
+  --color-phosphor: #4af626;
 
   /* PWA / browser chrome */
-  --pwa-background-color: #0f0f0f;
-  --pwa-theme-color: #0f0f0f;
+  --pwa-background-color: #0a0a0a;
+  --pwa-theme-color: #0a0a0a;
 
   /* Typography */
   --font-family-display:
@@ -38,15 +39,16 @@
     'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas,
     'Liberation Mono', monospace;
   --font-family: var(--font-family-mono);
-  --font-size: 13px;
-  --font-size-xs: 0.72rem;
+  --font-size: 12px;
+  --font-size-xs: 0.7rem;
   --font-size-sm: 0.8rem;
   --font-size-md: 0.9rem;
   --font-weight-bold: 500;
   --font-weight-normal: 400;
-  --font-weight-display: 500;
-  --letter-spacing: 0;
-  --letter-spacing-label: 0.08em;
+  --font-weight-display: 800;
+  --letter-spacing: 0.04em;
+  --letter-spacing-label: 0.1em;
+  --letter-spacing-display: -0.05em;
 
   /* Animation */
   --duration-fast: 80ms;
@@ -57,34 +59,12 @@
   --transition-speed-fast: var(--duration-fast);
   --transition-easing: var(--ease-out);
 
-  /* Shadows */
-  --shadow-panel: 0 8px 24px color-mix(in srgb, #000 40%, transparent);
+  /* Hard mechanical shadow only — no soft ambient */
+  --shadow-panel: 4px 4px 0 color-mix(in srgb, #000 80%, transparent);
 }
 
 @media (min-width: 34rem) {
   :root {
     --layout-inset-x: var(--space-xl);
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-background: #f5f3ee;
-  --color-surface: #fbfaf7;
-    --color-surface-elevated: #ffffff;
-    --color-text-subtle: #6b6b6b;
-    --color-text-muted: #9a9a9a;
-    --color-text: #191919;
-    --color-focus: #eceae4;
-    --color-border: #d5d1c9;
-    --color-border-subtle: #e4e1da;
-    --color-accent: #a83c24;
-    --color-accent-hover: #8a2f1b;
-    --color-accent-dim: #bf4e33;
-
-    --pwa-background-color: #f5f3ee;
-    --pwa-theme-color: #f5f3ee;
-
-    --shadow-panel: 0 8px 24px color-mix(in srgb, #191919 10%, transparent);
   }
 }

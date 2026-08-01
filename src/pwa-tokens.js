@@ -6,16 +6,17 @@ export const PWA_TOKENS = {
   version: '2.0.0',
   colors: {
     dark: {
-      background: '#0f0f0f',
-      theme: '#0f0f0f',
-      surface: '#161616',
-      accent: '#c24a2e',
+      background: '#0a0a0a',
+      theme: '#0a0a0a',
+      surface: '#121212',
+      accent: '#e61919',
     },
+    /* Tactical Telemetry is dark-exclusive; light mirrors dark for OS edge cases */
     light: {
-      background: '#f5f3ee',
-      theme: '#f5f3ee',
-      surface: '#faf8f4',
-      accent: '#a83c24',
+      background: '#0a0a0a',
+      theme: '#0a0a0a',
+      surface: '#121212',
+      accent: '#e61919',
     },
   },
 };

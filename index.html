@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="dark" />
     <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0f0f0f" />
+    <meta name="theme-color" content="#0a0a0a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -33,19 +33,38 @@
   <body>
     <main>
       <section class="zone zone-header" aria-label="Workspace">
+        <div class="zone-label" aria-hidden="true">
+          <span>[ WORKSPACE ]</span>
+          <span class="zone-label-id">UNIT / WS-01</span>
+        </div>
         <tabs-component></tabs-component>
       </section>
       <section class="zone zone-moment" aria-label="Time">
-        <clock-component></clock-component>
-        <div id="search-affordance"></div>
+        <div class="zone-label" aria-hidden="true">
+          <span>[ SYS.TIME ]</span>
+          <span class="zone-label-id">REV 2.0</span>
+        </div>
+        <div class="zone-moment-body">
+          <clock-component></clock-component>
+          <div id="search-affordance"></div>
+        </div>
       </section>
       <section class="zone zone-actions" aria-label="Shortcuts">
+        <div class="zone-label" aria-hidden="true">
+          <span>[ OPS / SHORTCUTS ]</span>
+          <span class="zone-label-id">GRID</span>
+        </div>
         <commands-component></commands-component>
       </section>
       <section class="zone zone-news" aria-label="Hacker News">
+        <div class="zone-label" aria-hidden="true">
+          <span>[ FEED / HN ]</span>
+          <span class="zone-label-id">NET</span>
+        </div>
         <newsfeed-component></newsfeed-component>
       </section>
     </main>
+    <span class="offline-badge" aria-live="polite">[ OFFLINE ]</span>
     <search-component></search-component>
 
     <script type="module" src="/src/main.js"></script>

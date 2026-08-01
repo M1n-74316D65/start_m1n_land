@@ -42,9 +42,7 @@ searchTemplate.innerHTML = `
     }
 
     .dialog::backdrop {
-      background: color-mix(in srgb, var(--color-background) 90%, transparent);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: color-mix(in srgb, var(--color-background) 92%, transparent);
       opacity: 0;
       transition: opacity var(--duration-normal) var(--ease-out);
     }
@@ -70,6 +68,10 @@ searchTemplate.innerHTML = `
         animation: none;
         opacity: 1;
       }
+
+      .spinner[visible] {
+        animation: none;
+      }
     }
 
     .form {
@@ -93,12 +95,16 @@ searchTemplate.innerHTML = `
       gap: var(--space-sm);
       padding: 0.5rem var(--space-lg);
       border-bottom: 1px solid var(--color-border);
+      background: var(--color-background);
     }
 
     .search-panel-label {
       color: var(--color-text-subtle);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -118,12 +124,17 @@ searchTemplate.innerHTML = `
       color: var(--color-text-muted);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       flex-shrink: 0;
     }
 
     .search-panel-hint kbd {
       font-family: inherit;
       color: var(--color-text-subtle);
+      border: 1px solid var(--color-border);
+      padding: 0.05rem 0.3rem;
+      background: var(--color-surface);
     }
 
     .search-mode {
@@ -134,6 +145,8 @@ searchTemplate.innerHTML = `
       border-bottom: 1px solid var(--color-border-subtle);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       color: var(--color-text-muted);
       min-height: 1.75rem;
       box-sizing: border-box;
@@ -146,9 +159,13 @@ searchTemplate.innerHTML = `
     }
 
     .search-mode-kind {
-      color: var(--color-text);
+      color: var(--color-accent);
       font-weight: var(--font-weight-bold);
       flex-shrink: 0;
+    }
+
+    .search-mode-kind::before {
+      content: '>>> ';
     }
 
     .search-mode-detail {
@@ -169,11 +186,12 @@ searchTemplate.innerHTML = `
       font-family: var(--font-family-mono);
       font-size: clamp(0.95rem, 2.5vw, 1.1rem);
       font-weight: var(--font-weight-normal);
+      letter-spacing: var(--letter-spacing);
       padding: var(--space-sm) 2rem var(--space-sm) var(--space-md);
       text-align: left;
       width: 100%;
       box-sizing: border-box;
-      background: var(--color-focus);
+      background: var(--color-background);
       border: none;
       box-shadow: inset 0 0 0 1px var(--color-border);
       transition:
@@ -182,13 +200,16 @@ searchTemplate.innerHTML = `
     }
 
     .input:focus {
-      background: var(--color-surface-elevated);
+      background: var(--color-focus);
       box-shadow: inset 0 0 0 1px var(--color-accent);
       outline: none;
     }
 
     .input::placeholder {
       color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-label);
+      font-size: 0.85em;
     }
 
     .clear-btn {
@@ -203,13 +224,15 @@ searchTemplate.innerHTML = `
       justify-content: center;
       color: var(--color-text-muted);
       background: transparent;
+      border: 1px solid transparent;
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
       transition:
         opacity var(--duration-fast) var(--ease-out),
         background var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out);
+        color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
     }
 
     .clear-btn[visible] {
@@ -220,6 +243,7 @@ searchTemplate.innerHTML = `
     .clear-btn:hover {
       background: var(--color-focus);
       color: var(--color-text);
+      border-color: var(--color-border);
     }
 
     .clear-btn:focus-visible {
@@ -233,12 +257,11 @@ searchTemplate.innerHTML = `
       right: calc(var(--space-lg) + var(--space-sm));
       top: 50%;
       transform: translateY(-50%);
-      width: 0.9rem;
-      height: 0.9rem;
-      border: 2px solid var(--color-border);
+      width: 0.85rem;
+      height: 0.85rem;
+      border: 1px solid var(--color-border);
       border-top-color: var(--color-accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      border-right-color: var(--color-accent);
       opacity: 0;
       pointer-events: none;
       transition: opacity var(--duration-fast) var(--ease-out);
@@ -246,6 +269,7 @@ searchTemplate.innerHTML = `
 
     .spinner[visible] {
       opacity: 1;
+      animation: spin 0.7s linear infinite;
     }
 
     @keyframes spin {
@@ -278,6 +302,7 @@ searchTemplate.innerHTML = `
       cursor: pointer;
       font-family: var(--font-family-mono);
       font-size: var(--font-size-sm);
+      letter-spacing: var(--letter-spacing);
       padding: 0.55rem var(--space-lg);
       width: 100%;
       box-sizing: border-box;
@@ -322,8 +347,20 @@ searchTemplate.innerHTML = `
       display: inline-block;
       color: var(--color-text-subtle);
       font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
       min-width: 1.1rem;
       margin-right: 0.35rem;
+    }
+
+    .suggestion .key::before {
+      content: '[';
+      color: var(--color-text-muted);
+    }
+
+    .suggestion .key::after {
+      content: ']';
+      color: var(--color-text-muted);
     }
 
     .match {
@@ -335,7 +372,7 @@ searchTemplate.innerHTML = `
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
       <div class="search-panel">
         <div class="search-panel-header">
-          <span class="search-panel-label">Command line <span class="search-workspace"></span></span>
+          <span class="search-panel-label">[ CMD.LINE ] <span class="search-workspace"></span></span>
           <span class="search-panel-hint"><kbd>esc</kbd> close</span>
         </div>
         <div class="search-mode" data-kind="idle" aria-live="polite">
@@ -348,7 +385,7 @@ searchTemplate.innerHTML = `
             aria-label="Search"
             title="search"
             type="text"
-            placeholder="Type a command, URL, or query"
+            placeholder="Command, URL, or query"
           />
           <button type="button" class="clear-btn" aria-label="Clear">×</button>
           <div class="spinner" aria-hidden="true"></div>
@@ -428,8 +465,8 @@ export class Search extends HTMLElement {
     this.#affordance.className = 'search-affordance';
     this.#affordance.setAttribute('aria-label', 'Open search');
     this.#affordance.innerHTML = `
-      <span class="search-affordance-label">command, url, or query<span class="search-affordance-cursor" aria-hidden="true"></span></span>
-      <span class="search-affordance-hint"><kbd>/</kbd></span>
+      <span class="search-affordance-label">command / url / query<span class="search-affordance-cursor" aria-hidden="true"></span></span>
+      <span class="search-affordance-hint"><kbd>/</kbd> open</span>
     `;
 
     this.#boundAffordanceClick = () => this.#open('');
@@ -491,7 +528,9 @@ export class Search extends HTMLElement {
 
   #updateWorkspaceLabel() {
     const workspace = workspaceManager.activeWorkspace;
-    this.#workspaceLabel.textContent = workspace ? `// ${workspace.name}` : '';
+    this.#workspaceLabel.textContent = workspace
+      ? `// ${workspace.name.toUpperCase()}`
+      : '';
   }
 
   #normalizeKey(key) {
@@ -505,7 +544,11 @@ export class Search extends HTMLElement {
   /** Preview of what Enter will do — mirrors #executeSearch resolution. */
   #resolveMode(value) {
     if (!value) {
-      return { kind: 'idle', label: 'type', detail: 'command, url, or query' };
+      return {
+        kind: 'idle',
+        label: 'READY',
+        detail: 'COMMAND, URL, OR QUERY',
+      };
     }
 
     const commands = this.#workspaceCommands();
@@ -518,8 +561,8 @@ export class Search extends HTMLElement {
       if (command?.searchTemplate && query) {
         return {
           kind: 'search-cmd',
-          label: 'search',
-          detail: `${command.name} · ${query}`,
+          label: 'SEARCH',
+          detail: `${command.name.toUpperCase()} · ${query}`,
         };
       }
     }
@@ -532,8 +575,8 @@ export class Search extends HTMLElement {
       if (command?.url && path) {
         return {
           kind: 'path',
-          label: 'path',
-          detail: `${command.name} / ${path}`,
+          label: 'PATH',
+          detail: `${command.name.toUpperCase()} / ${path}`,
         };
       }
     }
@@ -542,22 +585,22 @@ export class Search extends HTMLElement {
     if (directCommand) {
       return {
         kind: 'go',
-        label: 'go',
-        detail: directCommand.name,
+        label: 'GO',
+        detail: directCommand.name.toUpperCase(),
       };
     }
 
     if (this.#isUrl(value)) {
       return {
         kind: 'url',
-        label: 'open',
+        label: 'OPEN',
         detail: value.startsWith('http') ? value : `https://${value}`,
       };
     }
 
     return {
       kind: 'search',
-      label: 'search',
+      label: 'SEARCH',
       detail: value,
     };
   }

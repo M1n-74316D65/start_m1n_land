@@ -3,29 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#080909" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a0a" />
     <title>Offline - M1n Startpage</title>
     <style>
       :root {
-        --color-background: #080909;
-        --color-surface: #0d0e0e;
-        --color-text: #e0e2e0;
-        --color-text-muted: #565e5e;
-        --color-border: #1a1d1d;
-        --color-accent: #7cba5f;
-        --zone-radius: 0.625rem;
-      }
-
-      @media (prefers-color-scheme: light) {
-        :root {
-          --color-background: #eceeed;
-          --color-surface: #f5f6f5;
-          --color-text: #161816;
-          --color-text-muted: #727979;
-          --color-border: #d0d3d0;
-          --color-accent: #5b943b;
-        }
+        --color-background: #0a0a0a;
+        --color-surface: #121212;
+        --color-text: #eaeaea;
+        --color-text-muted: #5c5c5c;
+        --color-border: #2a2a2a;
+        --color-accent: #e61919;
       }
 
       * {
@@ -37,83 +25,107 @@
       body {
         font-family:
           'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
-        background:
-          radial-gradient(
-            ellipse 80% 50% at 50% -10%,
-            rgba(124, 186, 95, 0.035),
-            transparent 70%
-          ),
-          var(--color-background);
+        background: var(--color-background);
         color: var(--color-text);
         min-height: 100dvh;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 1.25rem;
+        position: relative;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.12) 2px,
+          rgba(0, 0, 0, 0.12) 4px
+        );
       }
 
       .container {
         width: min(100%, 28rem);
-        padding: 1.5rem;
-        text-align: center;
-        background: var(--color-surface);
         border: 1px solid var(--color-border);
-        border-radius: var(--zone-radius);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        background: var(--color-surface);
+        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
       }
 
       .status {
         color: var(--color-accent);
-        font-size: 0.68rem;
-        letter-spacing: 0.04em;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        margin-bottom: 0.85rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-background);
+      }
+
+      .body {
+        padding: 1.5rem 1rem;
       }
 
       h1 {
         font-size: clamp(1.35rem, 4vw, 1.75rem);
         font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
         margin-bottom: 0.65rem;
       }
 
       p {
         color: var(--color-text-muted);
         margin-bottom: 1.25rem;
-        line-height: 1.6;
-        font-size: 0.85rem;
+        line-height: 1.5;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
 
       button {
         font-family: inherit;
-        background: var(--color-accent);
-        color: var(--color-background);
-        border: 1px solid transparent;
+        background: transparent;
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
         padding: 0.55rem 1rem;
-        border-radius: 0.25rem;
         cursor: pointer;
-        font-size: 0.75rem;
-        letter-spacing: 0.02em;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
         transition:
-          opacity 0.2s ease,
-          transform 0.15s ease;
+          border-color 0.14s ease,
+          color 0.14s ease,
+          background 0.14s ease;
       }
 
       button:hover,
       button:focus-visible {
-        opacity: 0.92;
-        transform: translateY(-1px);
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+        background: var(--color-background);
         outline: none;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="status">Offline</div>
-      <h1>You're offline</h1>
-      <p>Shortcuts still work from cache. Live search needs a connection.</p>
-      <button type="button" onclick="window.location.reload()">
-        Try again
-      </button>
+      <div class="status">[ OFFLINE ] NET / LOST</div>
+      <div class="body">
+        <h1>Link down</h1>
+        <p>
+          Cached shortcuts remain available. Live search requires a network
+          connection.
+        </p>
+        <button type="button" onclick="window.location.reload()">
+          >>> Retry
+        </button>
+      </div>
     </div>
   </body>
 </html>

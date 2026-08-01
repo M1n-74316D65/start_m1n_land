@@ -37,25 +37,19 @@ function initOfflineDetection() {
 }
 
 function updateThemeColor() {
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  /* Tactical Telemetry is dark-exclusive */
   const color =
     getComputedStyle(document.documentElement)
       .getPropertyValue('--pwa-theme-color')
-      .trim() || getThemeColor(isDark);
+      .trim() || getThemeColor(true);
 
   document
     .querySelector('meta[name="theme-color"]')
     ?.setAttribute('content', color);
 
-  const appleStatusBar = document.querySelector(
-    'meta[name="apple-mobile-web-app-status-bar-style"]'
-  );
-  if (appleStatusBar) {
-    appleStatusBar.setAttribute(
-      'content',
-      isDark ? 'black-translucent' : 'default'
-    );
-  }
+  document
+    .querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
+    ?.setAttribute('content', 'black-translucent');
 }
 
 function initKeyboardShortcuts() {
