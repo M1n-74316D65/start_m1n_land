@@ -37,11 +37,11 @@ function initOfflineDetection() {
 }
 
 function updateThemeColor() {
-  /* Tactical Telemetry is dark-exclusive */
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const color =
     getComputedStyle(document.documentElement)
       .getPropertyValue('--pwa-theme-color')
-      .trim() || getThemeColor(true);
+      .trim() || getThemeColor(isDark);
 
   document
     .querySelector('meta[name="theme-color"]')
@@ -49,7 +49,7 @@ function updateThemeColor() {
 
   document
     .querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
-    ?.setAttribute('content', 'black-translucent');
+    ?.setAttribute('content', isDark ? 'black-translucent' : 'default');
 }
 
 function initKeyboardShortcuts() {

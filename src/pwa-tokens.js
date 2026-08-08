@@ -11,11 +11,11 @@ export const PWA_TOKENS = {
       surface: '#121212',
       accent: '#e61919',
     },
-    /* Tactical Telemetry is dark-exclusive; light mirrors dark for OS edge cases */
+    /* Swiss Industrial Print (Light) palette */
     light: {
-      background: '#0a0a0a',
-      theme: '#0a0a0a',
-      surface: '#121212',
+      background: '#f4f4f0',
+      theme: '#f4f4f0',
+      surface: '#eae8e3',
       accent: '#e61919',
     },
   },

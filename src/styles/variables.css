@@ -59,6 +59,10 @@
   --transition-speed-fast: var(--duration-fast);
   --transition-easing: var(--ease-out);
 
+  /* Effects */
+  --scanline-color: rgba(0, 0, 0, 0.12);
+  --noise-opacity: 0.04;
+
   /* Hard mechanical shadow only — no soft ambient */
   --shadow-panel: 4px 4px 0 color-mix(in srgb, #000 80%, transparent);
 }
@@ -66,5 +70,35 @@
 @media (min-width: 34rem) {
   :root {
     --layout-inset-x: var(--space-xl);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Swiss Industrial Print palette (matte documentation paper + carbon ink) */
+    --color-background: #f4f4f0;
+    --color-surface: #eae8e3;
+    --color-surface-elevated: #dfddd6;
+    --color-text-subtle: #4f4f4a;
+    --color-text-muted: #7a7972;
+    --color-text: #050505;
+    --color-focus: #dedcd4;
+    --color-border: #c8c5bc;
+    --color-border-subtle: #dad7ce;
+    --color-accent: #e61919;
+    --color-accent-hover: #ff2a2a;
+    --color-accent-dim: #a31212;
+    --color-phosphor: #187a00;
+
+    /* Effects */
+    --scanline-color: rgba(0, 0, 0, 0.025);
+    --noise-opacity: 0.035;
+
+    /* PWA / browser chrome */
+    --pwa-background-color: #f4f4f0;
+    --pwa-theme-color: #f4f4f0;
+
+    /* Hard mechanical print shadow */
+    --shadow-panel: 4px 4px 0 color-mix(in srgb, #050505 18%, transparent);
   }
 }
