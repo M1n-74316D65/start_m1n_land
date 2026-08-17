@@ -95,6 +95,21 @@ function initPWAInstall() {
   });
 }
 
+function initWorkspaceUnit() {
+  const unitEl = document.getElementById('workspace-unit');
+  if (!unitEl) return;
+
+  const updateUnit = () => {
+    const workspace = workspaceManager.activeWorkspace;
+    if (!workspace) return;
+    const index = workspaceManager.workspaces.indexOf(workspace);
+    unitEl.textContent = `UNIT / WS-0${index + 1}`;
+  };
+
+  updateUnit();
+  window.addEventListener('workspacechange', updateUnit);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const components = [
     import('./components/Clock.js'),
@@ -117,4 +132,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initKeyboardShortcuts();
   initThemeListener();
   initPWAInstall();
+  initWorkspaceUnit();
 });

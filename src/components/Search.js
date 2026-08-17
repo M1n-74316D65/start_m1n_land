@@ -143,6 +143,7 @@ searchTemplate.innerHTML = `
       gap: var(--space-sm);
       padding: 0.45rem var(--space-lg);
       border-bottom: 1px solid var(--color-border-subtle);
+      border-left: 2px solid var(--color-border-subtle);
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
       letter-spacing: var(--letter-spacing-label);
@@ -150,12 +151,22 @@ searchTemplate.innerHTML = `
       color: var(--color-text-muted);
       min-height: 1.75rem;
       box-sizing: border-box;
+      transition: border-left-color var(--duration-fast) var(--ease-out);
     }
 
     .search-mode[data-kind='go'],
     .search-mode[data-kind='search-cmd'],
     .search-mode[data-kind='path'] {
       color: var(--color-text-subtle);
+    }
+
+    /* Per-mode left accent so the commit action reads at a glance (skill §5) */
+    .search-mode[data-kind='go'] {
+      border-left-color: var(--color-accent);
+    }
+
+    .search-mode[data-kind='go'] .search-mode-kind {
+      color: var(--color-text);
     }
 
     .search-mode-kind {

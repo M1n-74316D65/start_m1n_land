@@ -86,6 +86,26 @@ clockTemplate.innerHTML = `
       color: var(--color-text-muted);
       margin-right: 0.15rem;
     }
+
+    /* Single-purpose terminal-green status readout (skill §4) */
+    .status {
+      color: var(--color-phosphor);
+      font-variant-numeric: tabular-nums;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: '[ ';
+      color: var(--color-text-muted);
+    }
+
+    .status::after {
+      content: ' ]';
+      color: var(--color-text-muted);
+    }
   </style>
   <div class="clock-container">
     <time class="time"></time>
@@ -93,6 +113,7 @@ clockTemplate.innerHTML = `
       <span class="meta-row">
         <span class="greeting"></span>
         <span class="seconds">00</span>
+        <span class="status"></span>
       </span>
       <span class="date"></span>
     </span>
@@ -104,7 +125,10 @@ export class Clock extends HTMLElement {
   #time;
   #date;
   #seconds;
+  #status;
   #interval;
+  #boundOnline;
+  #boundOffline;
   #lastHours = -1;
   #lastMinutes = -1;
   #lastSeconds = -1;
@@ -118,12 +142,28 @@ export class Clock extends HTMLElement {
     this.#time = this.shadowRoot.querySelector('.time');
     this.#date = this.shadowRoot.querySelector('.date');
     this.#seconds = this.shadowRoot.querySelector('.seconds');
+    this.#status = this.shadowRoot.querySelector('.status');
+    this.#updateStatus();
     this.#updateClock();
     this.#interval = setInterval(() => this.#updateClock(), 1000);
+    this.#boundOnline = () => this.#updateStatus();
+    this.#boundOffline = () => this.#updateStatus();
+    window.addEventListener('online', this.#boundOnline);
+    window.addEventListener('offline', this.#boundOffline);
   }
 
   disconnectedCallback() {
     if (this.#interval) clearInterval(this.#interval);
+    window.removeEventListener('online', this.#boundOnline);
+    window.removeEventListener('offline', this.#boundOffline);
+  }
+
+  #updateStatus() {
+    if (!this.#status) return;
+    const online = navigator.onLine;
+    this.#status.textContent = online ? 'ONLINE' : 'OFFLINE';
+    /* Offline is owned by the fixed red badge; silence the green readout */
+    this.#status.style.display = online ? '' : 'none';
   }
 
   #updateClock() {

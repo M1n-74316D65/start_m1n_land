@@ -85,6 +85,7 @@ newsTemplate.innerHTML = `
       overflow: hidden;
       padding: var(--space-sm) var(--space-md) 0;
       color: var(--color-text);
+      font-family: var(--font-family-serif);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
       letter-spacing: 0.02em;
