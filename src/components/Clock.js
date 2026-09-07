@@ -4,107 +4,86 @@ clockTemplate.innerHTML = `
     :host {
       display: block;
       min-width: 0;
-      max-width: 100%;
     }
-
     .clock-container {
       display: flex;
-      flex-wrap: wrap;
       align-items: flex-end;
-      gap: 0.55rem var(--space-xl);
-      text-align: left;
-      min-width: 0;
-      max-width: 100%;
+      justify-content: space-between;
+      gap: var(--space-xl);
     }
-
     .time {
-      color: var(--color-text);
-      font-family: var(--font-family-display);
-      font-size: clamp(4.5rem, 18vw, 10rem);
-      font-weight: var(--font-weight-display);
+      font: var(--font-weight-display) var(--font-size-clock)/0.9
+        var(--font-family-display);
       letter-spacing: var(--letter-spacing-display);
-      line-height: 0.85;
       font-variant-numeric: tabular-nums;
-      max-width: 100%;
-      text-transform: uppercase;
+      white-space: nowrap;
     }
-
-    .time .colon {
-      color: var(--color-accent);
-      margin: 0 0.02em;
-      opacity: 1;
-      font-weight: var(--font-weight-display);
+    .colon {
+      margin: 0 0.015em;
     }
-
     .meta {
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
-      color: var(--color-text-subtle);
-      font-family: var(--font-family-mono);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      padding-bottom: 0.55rem;
-      min-width: 0;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-sm);
     }
-
     .meta-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: baseline;
       gap: var(--space-sm);
-      flex-wrap: wrap;
     }
-
     .greeting {
-      color: var(--color-text-muted);
+      width: 100%;
+      font-size: var(--font-size-lg);
+      letter-spacing: var(--letter-spacing-heading);
+      line-height: 1.2;
     }
-
-    .greeting::before {
-      content: '< ';
-      color: var(--color-accent);
-    }
-
-    .greeting::after {
-      content: ' >';
-      color: var(--color-accent);
-    }
-
     .date {
       color: var(--color-text-subtle);
+      font-size: var(--font-size-md);
     }
-
-    .seconds {
-      color: var(--color-accent);
-      font-variant-numeric: tabular-nums;
-      font-size: var(--font-size-sm);
-    }
-
-    .seconds::before {
-      content: 'T+';
-      color: var(--color-text-muted);
-      margin-right: 0.15rem;
-    }
-
-    /* Single-purpose terminal-green status readout (skill §4) */
+    .seconds,
     .status {
-      color: var(--color-phosphor);
-      font-variant-numeric: tabular-nums;
-      font-weight: var(--font-weight-bold);
+      color: var(--color-text-muted);
+      font: var(--font-size-xs) var(--font-family-mono);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      white-space: nowrap;
     }
-
+    .seconds::after {
+      content: ' SEC';
+    }
     .status::before {
-      content: '[ ';
-      color: var(--color-text-muted);
+      content: '· ';
     }
-
-    .status::after {
-      content: ' ]';
-      color: var(--color-text-muted);
+    @media (max-width: 599px) {
+      .clock-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-lg);
+      }
+      .meta {
+        width: 100%;
+        padding: 0;
+      }
+      .meta-row {
+        align-items: center;
+      }
+      .greeting {
+        width: auto;
+        flex: 1;
+        font-size: var(--font-size-lg);
+      }
+      .date {
+        font-size: var(--font-size-sm);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
   <div class="clock-container">
@@ -173,13 +152,11 @@ export class Clock extends HTMLElement {
     const seconds = now.getSeconds().toString().padStart(2, '0');
     const timeStr = `${hours}<span class="colon">:</span>${minutes}`;
     const greeting = this.#getGreeting(now.getHours());
-    const dateStr = now
-      .toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      })
-      .toUpperCase();
+    const dateStr = now.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    });
 
     if (this.#lastHours !== hours || this.#lastMinutes !== minutes) {
       this.#time.innerHTML = timeStr;
@@ -200,10 +177,10 @@ export class Clock extends HTMLElement {
   }
 
   #getGreeting(hours) {
-    if (hours >= 5 && hours < 12) return 'MORNING';
-    if (hours >= 12 && hours < 17) return 'AFTERNOON';
-    if (hours >= 17 && hours < 21) return 'EVENING';
-    return 'NIGHT';
+    if (hours >= 5 && hours < 12) return 'Good morning.';
+    if (hours >= 12 && hours < 17) return 'Good afternoon.';
+    if (hours >= 17 && hours < 21) return 'Good evening.';
+    return 'Up late.';
   }
 }
 

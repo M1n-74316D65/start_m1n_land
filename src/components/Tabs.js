@@ -5,103 +5,63 @@ tabsTemplate.innerHTML = `
   <style>
     :host {
       display: block;
-      width: 100%;
       min-width: 0;
-      max-width: 100%;
     }
-
     .tabs-container {
       display: flex;
-      align-items: stretch;
-      gap: 0;
-      width: 100%;
-      max-width: 100%;
-      background: var(--color-border);
-    }
-
-    .tab {
-      flex: 1;
+      gap: var(--space-xs);
+      padding: var(--space-xs);
       background: var(--color-surface);
-      border: none;
-      color: var(--color-text-muted);
-      cursor: pointer;
-      font-family: var(--font-family-mono);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      padding: 0.65rem var(--space-md);
-      min-width: 0;
-      position: relative;
-      transition:
-        color var(--duration-normal) var(--ease-out),
-        background var(--duration-normal) var(--ease-out);
-      outline: 0;
+      border-radius: var(--radius-md);
+    }
+    .tab {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: center;
-      gap: 0.45rem;
+      gap: var(--space-md);
+      min-height: var(--control-min-height);
+      padding: var(--space-sm) var(--space-xl);
+      border: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-text-subtle);
+      font: inherit;
+      font-size: var(--font-size-sm);
+      cursor: pointer;
     }
-
-    .tab + .tab {
-      margin-left: 1px;
-    }
-
-    .tab:hover {
-      color: var(--color-text);
+    .tab:hover,
+    .tab:active {
       background: var(--color-focus);
+      color: var(--color-text);
     }
-
-    .tab:focus-visible {
-      outline: none;
-      box-shadow: inset 0 0 0 1px var(--color-accent);
-      z-index: 1;
-    }
-
     .tab.active {
       color: var(--color-text);
       background: var(--color-background);
     }
-
-    .tab.active::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 2px;
-      background: var(--color-accent);
+    .tab:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
     }
-
     .tab-key {
-      font-size: var(--font-size-xs);
+      font: var(--font-size-xs) var(--font-family-mono);
       color: var(--color-text-muted);
     }
-
-    .tab-key::before {
-      content: '[';
-      color: var(--color-border);
-    }
-
-    .tab-key::after {
-      content: ']';
-      color: var(--color-border);
-    }
-
-    .tab.active .tab-key {
-      color: var(--color-accent);
-    }
-
-    .tab.active .tab-key::before,
-    .tab.active .tab-key::after {
-      color: var(--color-accent);
-    }
-
     .tab-name {
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    @media (max-width: 599px) {
+      .tab {
+        padding-inline: var(--space-md);
+        gap: var(--space-sm);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
   <nav class="tabs-container" role="tablist" aria-label="Workspaces"></nav>

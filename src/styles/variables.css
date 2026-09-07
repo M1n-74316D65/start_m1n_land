@@ -1,106 +1,91 @@
 :root {
-  /* Spacing scale */
+  --control-min-height: 2.75rem;
+  --control-height: 3.5rem;
+  --input-height: 3.5rem;
+  --key-size: 1.75rem;
+  --layout-search-max: 45rem;
+  --letter-spacing-heading: -0.035em;
+  --letter-spacing-brand: -0.06em;
+  --space-3xl: 4rem;
+  --font-size-lg: 1.25rem;
+  --font-size-heading: 1.75rem;
+  --font-size-clock: clamp(4.5rem, 13vw, 9rem);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 0.75rem;
   --space-lg: 1rem;
-  --space-xl: 1.75rem;
-  --space-2xl: 2.75rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2.5rem;
   --space: var(--space-md);
 
-  /* Layout */
-  --layout-max: 54rem;
-  --layout-inset-x: var(--space-md);
+  --layout-max: 60rem;
+  --layout-inset-x: clamp(1.25rem, 5vw, 4rem);
   --layout-inset-y: var(--space-2xl);
 
-  /* Tactical Telemetry palette (dark CRT exclusive) */
-  --color-background: #0a0a0a;
-  --color-surface: #121212;
-  --color-surface-elevated: #1a1a1a;
-  --color-text-subtle: #8a8a8a;
-  --color-text-muted: #5c5c5c;
-  --color-text: #eaeaea;
-  --color-focus: #161616;
-  --color-border: #2a2a2a;
-  --color-border-subtle: #1e1e1e;
-  --color-accent: #e61919;
-  --color-accent-hover: #ff2a2a;
-  --color-accent-dim: #a31212;
-  --color-phosphor: #4af626;
+  --color-background: #171916;
+  --color-surface: #22251f;
+  --color-surface-elevated: #2b3027;
+  --color-text-subtle: #b8bfb0;
+  --color-text-muted: #a0a995;
+  --color-text: #f0f1e9;
+  --color-focus: #343d2b;
+  --color-border: #414839;
+  --color-border-subtle: #32382c;
+  --color-accent: #c0d59b;
+  --color-accent-hover: #d6e6bb;
 
-  /* PWA / browser chrome */
-  --pwa-background-color: #0a0a0a;
-  --pwa-theme-color: #0a0a0a;
+  --pwa-background-color: #171916;
+  --pwa-theme-color: #171916;
 
-  /* Typography */
   --font-family-display:
     'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-family-mono:
     'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas,
     'Liberation Mono', monospace;
-  --font-family-serif:
-    'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-family: var(--font-family-mono);
-  --font-size: 12px;
-  --font-size-xs: 0.7rem;
-  --font-size-sm: 0.8rem;
-  --font-size-md: 0.9rem;
+  --font-family: var(--font-family-display);
+  --font-size: 16px;
+  --font-size-xs: 0.6875rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-md: 1rem;
   --font-weight-bold: 500;
   --font-weight-normal: 400;
-  --font-weight-display: 800;
-  --letter-spacing: 0.04em;
-  --letter-spacing-label: 0.1em;
-  --letter-spacing-display: -0.05em;
+  --font-weight-display: 400;
+  --letter-spacing: -0.015em;
+  --letter-spacing-label: 0.06em;
+  --letter-spacing-display: -0.065em;
 
-  /* Animation */
-  --duration-fast: 80ms;
-  --duration-normal: 140ms;
-  --duration-slow: 220ms;
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-slow: 240ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-speed: var(--duration-normal);
   --transition-speed-fast: var(--duration-fast);
   --transition-easing: var(--ease-out);
 
-  /* Effects */
-  --scanline-color: rgba(0, 0, 0, 0.12);
-  --noise-opacity: 0.04;
-
-  /* Hard mechanical shadow only — no soft ambient */
-  --shadow-panel: 4px 4px 0 color-mix(in srgb, #000 80%, transparent);
-}
-
-@media (min-width: 34rem) {
-  :root {
-    --layout-inset-x: var(--space-xl);
-  }
+  --shadow-panel: 0 24px 80px color-mix(in srgb, #171916 18%, transparent);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    /* Swiss Industrial Print palette (matte documentation paper + carbon ink) */
-    --color-background: #f4f4f0;
-    --color-surface: #eae8e3;
-    --color-surface-elevated: #dfddd6;
-    --color-text-subtle: #4f4f4a;
-    --color-text-muted: #7a7972;
-    --color-text: #050505;
-    --color-focus: #dedcd4;
-    --color-border: #c8c5bc;
-    --color-border-subtle: #dad7ce;
-    --color-accent: #e61919;
-    --color-accent-hover: #ff2a2a;
-    --color-accent-dim: #a31212;
-    --color-phosphor: #187a00;
+    --color-background: #f8f8f4;
+    --color-surface: #eeefe8;
+    --color-surface-elevated: #e5e8dd;
+    --color-text-subtle: #535b4c;
+    --color-text-muted: #5e6755;
+    --color-text: #242820;
+    --color-focus: #e2e6d8;
+    --color-border: #d5d9cd;
+    --color-border-subtle: #e3e6dc;
+    --color-accent: #465c2e;
+    --color-accent-hover: #30451c;
 
-    /* Effects */
-    --scanline-color: rgba(0, 0, 0, 0.025);
-    --noise-opacity: 0.035;
+    --pwa-background-color: #f8f8f4;
+    --pwa-theme-color: #f8f8f4;
 
-    /* PWA / browser chrome */
-    --pwa-background-color: #f4f4f0;
-    --pwa-theme-color: #f4f4f0;
-
-    /* Hard mechanical print shadow */
-    --shadow-panel: 4px 4px 0 color-mix(in srgb, #050505 18%, transparent);
+    --shadow-panel: 0 24px 80px color-mix(in srgb, #171916 18%, transparent);
   }
 }

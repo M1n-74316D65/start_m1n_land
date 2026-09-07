@@ -6,17 +6,16 @@ export const PWA_TOKENS = {
   version: '2.0.0',
   colors: {
     dark: {
-      background: '#0a0a0a',
-      theme: '#0a0a0a',
-      surface: '#121212',
-      accent: '#e61919',
+      background: '#171916',
+      theme: '#171916',
+      surface: '#22251f',
+      accent: '#c0d59b',
     },
-    /* Swiss Industrial Print (Light) palette */
     light: {
-      background: '#f4f4f0',
-      theme: '#f4f4f0',
-      surface: '#eae8e3',
-      accent: '#e61919',
+      background: '#f8f8f4',
+      theme: '#f8f8f4',
+      surface: '#eeefe8',
+      accent: '#465c2e',
     },
   },
 };

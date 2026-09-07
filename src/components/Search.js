@@ -28,14 +28,19 @@ searchTemplate.innerHTML = `
       border: none;
       display: none;
       flex-direction: column;
-      height: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      max-width: 100%;
+      margin: 0;
+      box-sizing: border-box;
+      overflow-y: auto;
       justify-content: center;
       left: 0;
       padding: var(--layout-inset-y) var(--layout-inset-x);
       top: 0;
       width: 100%;
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(var(--space-sm));
       transition:
         opacity var(--duration-slow) var(--ease-out),
         transform var(--duration-slow) var(--ease-out);
@@ -76,14 +81,14 @@ searchTemplate.innerHTML = `
 
     .form {
       width: 100%;
-      max-width: var(--layout-max);
+      max-width: var(--layout-search-max);
       margin: 0;
     }
 
     .search-panel {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
-      border-top: 2px solid var(--color-accent);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-panel);
       overflow: hidden;
     }
@@ -93,18 +98,18 @@ searchTemplate.innerHTML = `
       align-items: center;
       justify-content: space-between;
       gap: var(--space-sm);
-      padding: 0.5rem var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
       border-bottom: 1px solid var(--color-border);
       background: var(--color-background);
     }
 
     .search-panel-label {
       color: var(--color-text-subtle);
-      font-family: var(--font-family-mono);
+      font-family: var(--font-family-display);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-bold);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
+      text-transform: none;
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -114,18 +119,18 @@ searchTemplate.innerHTML = `
     .search-workspace {
       color: var(--color-text);
       font-weight: var(--font-weight-bold);
-      margin-left: 0.35rem;
+      margin-left: var(--space-sm);
     }
 
     .search-panel-hint {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: var(--space-xs);
       color: var(--color-text-muted);
-      font-family: var(--font-family-mono);
+      font-family: var(--font-family-display);
       font-size: var(--font-size-xs);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
+      text-transform: none;
       flex-shrink: 0;
     }
 
@@ -133,23 +138,25 @@ searchTemplate.innerHTML = `
       font-family: inherit;
       color: var(--color-text-subtle);
       border: 1px solid var(--color-border);
-      padding: 0.05rem 0.3rem;
+      padding: var(--space-xs) var(--space-sm);
       background: var(--color-surface);
     }
+
+    .search-mode[data-kind="idle"] { display: none; }
 
     .search-mode {
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: 0.45rem var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
       border-bottom: 1px solid var(--color-border-subtle);
       border-left: 2px solid var(--color-border-subtle);
-      font-family: var(--font-family-mono);
+      font-family: var(--font-family-display);
       font-size: var(--font-size-xs);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
+      text-transform: none;
       color: var(--color-text-muted);
-      min-height: 1.75rem;
+      min-height: var(--key-size);
       box-sizing: border-box;
       transition: border-left-color var(--duration-fast) var(--ease-out);
     }
@@ -176,7 +183,7 @@ searchTemplate.innerHTML = `
     }
 
     .search-mode-kind::before {
-      content: '>>> ';
+      content: '↗ ';
     }
 
     .search-mode-detail {
@@ -194,11 +201,13 @@ searchTemplate.innerHTML = `
 
     .input {
       color: var(--color-text);
-      font-family: var(--font-family-mono);
-      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-lg);
       font-weight: var(--font-weight-normal);
       letter-spacing: var(--letter-spacing);
-      padding: var(--space-sm) 2rem var(--space-sm) var(--space-md);
+      padding: var(--space-md) calc(3 * var(--space-lg)) var(--space-md) var(--space-lg);
+      min-height: var(--input-height);
+      border-radius: var(--radius-sm);
       text-align: left;
       width: 100%;
       box-sizing: border-box;
@@ -218,9 +227,9 @@ searchTemplate.innerHTML = `
 
     .input::placeholder {
       color: var(--color-text-muted);
-      text-transform: uppercase;
+      text-transform: none;
       letter-spacing: var(--letter-spacing-label);
-      font-size: 0.85em;
+      font-size: var(--font-size-md);
     }
 
     .clear-btn {
@@ -228,8 +237,8 @@ searchTemplate.innerHTML = `
       right: calc(var(--space-lg) + var(--space-sm));
       top: 50%;
       transform: translateY(-50%);
-      width: 1.35rem;
-      height: 1.35rem;
+      width: var(--control-min-height);
+      height: var(--control-min-height);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -268,8 +277,9 @@ searchTemplate.innerHTML = `
       right: calc(var(--space-lg) + var(--space-sm));
       top: 50%;
       transform: translateY(-50%);
-      width: 0.85rem;
-      height: 0.85rem;
+      width: var(--space-lg);
+      height: var(--space-lg);
+      border-radius: 50%;
       border: 1px solid var(--color-border);
       border-top-color: var(--color-accent);
       border-right-color: var(--color-accent);
@@ -280,7 +290,7 @@ searchTemplate.innerHTML = `
 
     .spinner[visible] {
       opacity: 1;
-      animation: spin 0.7s linear infinite;
+      animation: spin calc(3 * var(--duration-slow)) linear infinite;
     }
 
     @keyframes spin {
@@ -293,7 +303,7 @@ searchTemplate.innerHTML = `
     }
 
     .suggestions-wrapper:has(.suggestion) {
-      min-height: 2.5rem;
+      min-height: var(--space-2xl);
     }
 
     .suggestions {
@@ -311,10 +321,11 @@ searchTemplate.innerHTML = `
     .suggestion {
       color: var(--color-text-subtle);
       cursor: pointer;
-      font-family: var(--font-family-mono);
+      font-family: var(--font-family-display);
       font-size: var(--font-size-sm);
       letter-spacing: var(--letter-spacing);
-      padding: 0.55rem var(--space-lg);
+      padding: var(--space-md) var(--space-lg);
+      min-height: var(--control-min-height);
       width: 100%;
       box-sizing: border-box;
       text-align: left;
@@ -330,10 +341,10 @@ searchTemplate.innerHTML = `
       touch-action: manipulation;
     }
 
-    .suggestion:nth-child(1) { animation-delay: 0.03s; }
-    .suggestion:nth-child(2) { animation-delay: 0.06s; }
-    .suggestion:nth-child(3) { animation-delay: 0.09s; }
-    .suggestion:nth-child(4) { animation-delay: 0.12s; }
+    .suggestion:nth-child(1) { animation-delay: calc(var(--duration-fast) / 4); }
+    .suggestion:nth-child(2) { animation-delay: calc(var(--duration-fast) / 2); }
+    .suggestion:nth-child(3) { animation-delay: calc(var(--duration-fast) * 3 / 4); }
+    .suggestion:nth-child(4) { animation-delay: var(--duration-fast); }
 
     @keyframes suggestionIn {
       to { opacity: 1; }
@@ -359,9 +370,9 @@ searchTemplate.innerHTML = `
       color: var(--color-text-subtle);
       font-weight: var(--font-weight-bold);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      min-width: 1.1rem;
-      margin-right: 0.35rem;
+      text-transform: none;
+      min-width: var(--key-size);
+      margin-right: var(--space-sm);
     }
 
     .suggestion .key::before {
@@ -378,13 +389,14 @@ searchTemplate.innerHTML = `
       color: var(--color-text);
       font-weight: var(--font-weight-bold);
     }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .suggestion { opacity: 1; } }
   </style>
-  <dialog class="dialog">
+  <dialog class="dialog" aria-label="Search your workspace">
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
       <div class="search-panel">
         <div class="search-panel-header">
-          <span class="search-panel-label">[ CMD.LINE ] <span class="search-workspace"></span></span>
-          <span class="search-panel-hint"><kbd>esc</kbd> close</span>
+          <span class="search-panel-label">Search <span class="search-workspace"></span></span>
+          <span class="search-panel-hint"><kbd>esc</kbd></span>
         </div>
         <div class="search-mode" data-kind="idle" aria-live="polite">
           <span class="search-mode-kind"></span>
@@ -396,7 +408,7 @@ searchTemplate.innerHTML = `
             aria-label="Search"
             title="search"
             type="text"
-            placeholder="Command, URL, or query"
+            placeholder="Search"
           />
           <button type="button" class="clear-btn" aria-label="Clear">×</button>
           <div class="spinner" aria-hidden="true"></div>
@@ -476,8 +488,8 @@ export class Search extends HTMLElement {
     this.#affordance.className = 'search-affordance';
     this.#affordance.setAttribute('aria-label', 'Open search');
     this.#affordance.innerHTML = `
-      <span class="search-affordance-label">command / url / query<span class="search-affordance-cursor" aria-hidden="true"></span></span>
-      <span class="search-affordance-hint"><kbd>/</kbd> open</span>
+      <span class="search-affordance-label">Search</span>
+      <span class="search-affordance-hint"><kbd>/</kbd></span>
     `;
 
     this.#boundAffordanceClick = () => this.#open('');
@@ -539,9 +551,7 @@ export class Search extends HTMLElement {
 
   #updateWorkspaceLabel() {
     const workspace = workspaceManager.activeWorkspace;
-    this.#workspaceLabel.textContent = workspace
-      ? `// ${workspace.name.toUpperCase()}`
-      : '';
+    this.#workspaceLabel.textContent = workspace ? `// ${workspace.name}` : '';
   }
 
   #normalizeKey(key) {
@@ -557,8 +567,8 @@ export class Search extends HTMLElement {
     if (!value) {
       return {
         kind: 'idle',
-        label: 'READY',
-        detail: 'COMMAND, URL, OR QUERY',
+        label: '',
+        detail: '',
       };
     }
 

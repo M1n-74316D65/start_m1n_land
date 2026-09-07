@@ -11,140 +11,88 @@ newsTemplate.innerHTML = `
       display: block;
       width: 100%;
       min-width: 0;
-      max-width: 100%;
     }
-
-    .news {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      width: 100%;
-      min-width: 0;
-      opacity: 0;
-      transform: translateY(2px);
-      animation: newsFadeIn var(--duration-slow) var(--ease-out) forwards;
+    .news[hidden] {
+      display: none;
     }
-
-    @keyframes newsFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     .stories {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-2xl);
       list-style: none;
       margin: 0;
       padding: 0;
       counter-reset: story;
-      background: var(--color-border);
-      gap: 1px;
     }
-
     .story {
       display: grid;
-      grid-template-columns: 2.25rem 1fr;
-      gap: 0;
-      min-width: 0;
-      background: var(--color-surface);
+      grid-template-columns: var(--space-xl) minmax(0, 1fr);
+      gap: var(--space-sm);
+      padding: var(--space-lg) 0;
+      border-top: 1px solid var(--color-border-subtle);
       counter-increment: story;
     }
-
     .story::before {
       content: counter(story, decimal-leading-zero);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: var(--space-sm) 0;
+      padding-top: var(--space-xs);
       color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: var(--letter-spacing-label);
-      font-variant-numeric: tabular-nums;
-      border-right: 1px solid var(--color-border-subtle);
-      background: var(--color-background);
+      font: var(--font-size-xs) var(--font-family-mono);
     }
-
     .story-body {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      align-items: flex-start;
+      gap: var(--space-sm);
       min-width: 0;
     }
-
     .title {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      padding: var(--space-sm) var(--space-md) 0;
       color: var(--color-text);
-      font-family: var(--font-family-serif);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-normal);
-      letter-spacing: 0.02em;
+      font: var(--font-size-md)/1.4 var(--font-family-display);
       text-decoration: none;
-      transition:
-        background var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out);
+      overflow-wrap: anywhere;
     }
-
     .title:hover {
-      background: var(--color-focus);
       color: var(--color-accent);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
     }
-
-    .title:focus-visible {
-      outline: none;
-      background: var(--color-focus);
-      color: var(--color-accent);
-      box-shadow: inset 0 0 0 1px var(--color-accent);
+    .title:focus-visible,
+    .meta a:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
     }
-
     .meta {
+      max-width: 100%;
       color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
-      padding: 0 var(--space-md) var(--space-sm);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font: var(--font-size-xs)/1.7 var(--font-family-mono);
+      overflow-wrap: anywhere;
     }
-
     .meta a {
       color: inherit;
       text-decoration: none;
     }
-
-    .meta a:hover,
-    .meta a:focus-visible {
-      color: var(--color-text-subtle);
+    .meta a:hover {
+      color: var(--color-accent);
       text-decoration: underline;
-      outline: none;
     }
-
     .news-empty {
+      grid-column: 1 / -1;
       color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
+      font-size: var(--font-size-sm);
       margin: 0;
-      padding: var(--space-md) var(--space-lg);
-      background: var(--color-surface);
+      padding: var(--space-lg) 0;
     }
-
+    @media (max-width: 899px) {
+      .stories {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .news {
-        animation: none;
-        opacity: 1;
-        transform: none;
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
       }
     }
   </style>
@@ -281,7 +229,7 @@ export class NewsFeed extends HTMLElement {
     list.replaceChildren();
     const empty = document.createElement('p');
     empty.className = 'news-empty';
-    empty.innerText = '[ ERR ] FEED UNAVAILABLE';
+    empty.innerText = 'The feed is unavailable right now. Check back later.';
     list.appendChild(empty);
     news.hidden = false;
   }
