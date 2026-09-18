@@ -15,8 +15,8 @@ export const COMMANDS = new Map([
   [
     'M',
     {
-      name: 'Minttr',
-      url: 'https://my.minttr.com/',
+      name: 'MyMemo',
+      url: 'https://app.mymemo.ai/',
       workspace: 'personal',
     },
   ],
