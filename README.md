@@ -35,6 +35,19 @@ e.g. `example.com` <kbd>Enter</kbd> will redirect you to
 
 Tilde is meant to be customized&mdash;[make it yours!](index.html)
 
+## Deployment
+
+GitHub Actions builds and deploys to pgs.sh on pushes to `main`. You can also
+run the Deploy workflow manually from the Actions tab.
+
+Before the first deployment, add a GitHub Actions secret named `SSH_DEPLOY_KEY`
+containing the SSH private key whose public key is registered with the pico.sh
+account that owns the site. SourceHut secrets do not transfer to GitHub.
+
+The workflow installs dependencies with Bun, builds `dist/`, uploads a
+commit-suffixed release, and promotes it to `start-m1n-land` at
+https://start.m1n.land. It retains the three latest releases.
+
 ## License
 
 Use and modify Tilde [as you see fit](UNLICENSE).

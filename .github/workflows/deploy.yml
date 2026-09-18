@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://start.m1n.land
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Set release name
+        id: release
+        run: echo "name=start-m1n-land-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to pgs.sh
+        uses: picosh/pgs-action@c5df20361f1c69112625315d7f2bf9c3eec95ff1 # v5
+        with:
+          key: ${{ secrets.SSH_DEPLOY_KEY }}
+          src: './dist/'
+          project: ${{ steps.release.outputs.name }}
+          promote: 'start-m1n-land'
+          retain: 'start-m1n-land-'
+          retain_num: 3

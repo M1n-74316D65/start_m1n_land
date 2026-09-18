@@ -76,10 +76,11 @@ the service worker.
 
 ## Deploy
 
-Automated via SourceHut builds
-(`.`build.yml`), **not** Vercel. On push: install Bun → `bun install`→`bun run
-build`→`rsync --delete -rv ./dist/
-pgs.sh:/start-m1n-land`. Requires the `SSH_DEPLOY_KEY`secret. Failure emails`~m1n/git.sr.ht`.
+Automated via GitHub Actions (`.github/workflows/deploy.yml`), **not** Vercel.
+On pushes to `main`: install Bun → `bun install --frozen-lockfile` →
+`bun run build` → deploy a SHA-suffixed release with `picosh/pgs-action@v5` →
+promote it to `start-m1n-land` → retain the three latest releases. Requires the
+`SSH_DEPLOY_KEY` GitHub Actions secret.
 
 `docker-compose.yml` is stale: it only mounts `index.html` into nginx on :8181,
 which won't resolve `/src/main.js` or the Vite bundle. Don't use it to serve the
