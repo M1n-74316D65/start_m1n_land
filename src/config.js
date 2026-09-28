@@ -11,7 +11,7 @@ export const CONFIG = {
 
 export const COMMANDS = new Map([
   // Personal (alphabetical by name)
-  ['C', { name: 'ChatGPT', url: 'https://chatgpt.com', workspace: 'personal' }],
+  ['C', { name: 'Kimi', url: 'https://www.kimi.ai', workspace: 'personal' }],
   [
     'M',
     {
