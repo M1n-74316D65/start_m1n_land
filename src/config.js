@@ -2,7 +2,7 @@ export const CONFIG = {
   commandPathDelimiter: '/',
   commandSearchDelimiter: ' ',
   commandCaseSensitive: false,
-  defaultSearchTemplate: 'https://search.brave.com/search?q={}',
+  defaultSearchTemplate: 'https://kagi.com/search?q={}',
   openLinksInNewTab: false,
   suggestionLimit: 4,
   defaultWorkspace: 'personal',
@@ -11,7 +11,18 @@ export const CONFIG = {
 
 export const COMMANDS = new Map([
   // Personal (alphabetical by name)
-  ['C', { name: 'Kimi', url: 'https://www.kimi.ai', workspace: 'personal' }],
+  [
+    'G',
+    { name: 'Gmail', url: 'https://mail.google.com/', workspace: 'personal' },
+  ],
+  [
+    'C',
+    {
+      name: 'Mistral',
+      url: 'https://chat.mistral.ai/work',
+      workspace: 'personal',
+    },
+  ],
   [
     'M',
     {
@@ -23,14 +34,6 @@ export const COMMANDS = new Map([
   [
     'B',
     { name: 'Pastebin', url: 'https://paste.m1n.land/', workspace: 'personal' },
-  ],
-  [
-    'G',
-    {
-      name: 'Posteo',
-      url: 'https://posteo.de/webmail/',
-      workspace: 'personal',
-    },
   ],
   [
     'R',
@@ -62,10 +65,10 @@ export const COMMANDS = new Map([
       workspace: 'dev',
     },
   ],
+  ['H', { name: 'GitHub', url: 'https://github.com', workspace: 'dev' }],
   ['N', { name: 'Neon', url: 'https://neon.tech', workspace: 'dev' }],
   ['I', { name: 'Pico', url: 'https://pico.sh', workspace: 'dev' }],
   ['S', { name: 'Server', url: 'http://192.168.1.139', workspace: 'dev' }],
-  ['H', { name: 'SourceHut', url: 'https://git.sr.ht/', workspace: 'dev' }],
   [
     'V',
     { name: 'Vercel', url: 'https://vercel.com/dashboard', workspace: 'dev' },

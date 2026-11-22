@@ -6,7 +6,7 @@ Tilde is a minimal browser homepage for pro web surfers.
 
 **To go to a site**, type the corresponding key and press <kbd>Enter</kbd>.
 
-e.g. `g` <kbd>Enter</kbd> will redirect you to [git.sr.ht](https://git.sr.ht)
+e.g. `h` <kbd>Enter</kbd> will redirect you to [github.com](https://github.com)
 
 **To search a site**, type a space after the site&rsquo;s key followed by your
 query.

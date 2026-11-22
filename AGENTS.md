@@ -52,7 +52,7 @@ registered as custom elements (`<clock-component>`, `<tabs-component>`,
   grid. Fetches the Algolia HN API (`hn.algolia.com/api/v1`, NetworkOnly in the
   service worker), refreshes every 10 min, fails silently. Workspace-agnostic.
 
-- `src/config.js` — `CONFIG` (delimiters, default search = Brave,
+- `src/config.js` — `CONFIG` (delimiters, default search = Kagi,
   suggestionLimit, workspace storage key) and `COMMANDS` Map. **Add/edit
   shortcuts here.** Each entry:
   `{ name, url, searchTemplate?, workspace, suggestions? }`.
@@ -65,7 +65,7 @@ registered as custom elements (`<clock-component>`, `<tabs-component>`,
   `Commands.js` (recent-then-frequent, top 2).
 - `src/components/Search.js` — the command parser. Three input modes: bare key
   (navigate), `key<space>query` (uses `searchTemplate`), `key/path` (origin +
-  path). Falls back to `CONFIG.defaultSearchTemplate` (Brave). DuckDuckGo `/ac/`
+  path). Falls back to `CONFIG.defaultSearchTemplate` (Kagi). DuckDuckGo `/ac/`
   endpoint supplies autocomplete suggestions. Commands are case-insensitive
   unless `CONFIG.commandCaseSensitive` is true.
 
