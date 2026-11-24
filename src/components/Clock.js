@@ -35,9 +35,10 @@ clockTemplate.innerHTML = `
     }
     .greeting {
       width: 100%;
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-heading);
+      font-weight: var(--font-weight-bold);
       letter-spacing: var(--letter-spacing-heading);
-      line-height: 1.2;
+      line-height: 1.15;
     }
     .date {
       color: var(--color-text-subtle);
@@ -71,7 +72,7 @@ clockTemplate.innerHTML = `
       .greeting {
         width: auto;
         flex: 1;
-        font-size: var(--font-size-lg);
+        font-size: var(--font-size-heading);
       }
       .date {
         font-size: var(--font-size-sm);

@@ -71,20 +71,20 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background: #f8f8f4;
-    --color-surface: #eeefe8;
-    --color-surface-elevated: #e5e8dd;
-    --color-text-subtle: #535b4c;
-    --color-text-muted: #5e6755;
-    --color-text: #242820;
-    --color-focus: #e2e6d8;
-    --color-border: #d5d9cd;
-    --color-border-subtle: #e3e6dc;
+    --color-background: #f4f4f1;
+    --color-surface: #eaeae5;
+    --color-surface-elevated: #e1e2db;
+    --color-text-subtle: #4d5148;
+    --color-text-muted: #5a5f54;
+    --color-text: #232520;
+    --color-focus: #dedfd8;
+    --color-border: #d0d1c9;
+    --color-border-subtle: #dedfd8;
     --color-accent: #465c2e;
     --color-accent-hover: #30451c;
 
-    --pwa-background-color: #f8f8f4;
-    --pwa-theme-color: #f8f8f4;
+    --pwa-background-color: #f4f4f1;
+    --pwa-theme-color: #f4f4f1;
 
     --shadow-panel: 0 24px 80px color-mix(in srgb, #171916 18%, transparent);
   }

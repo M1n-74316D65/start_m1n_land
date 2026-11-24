@@ -12,9 +12,9 @@ export const PWA_TOKENS = {
       accent: '#c0d59b',
     },
     light: {
-      background: '#f8f8f4',
-      theme: '#f8f8f4',
-      surface: '#eeefe8',
+      background: '#f4f4f1',
+      theme: '#f4f4f1',
+      surface: '#eaeae5',
       accent: '#465c2e',
     },
   },

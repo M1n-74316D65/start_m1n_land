@@ -318,7 +318,38 @@ searchTemplate.innerHTML = `
       border-top: 1px solid var(--color-border-subtle);
     }
 
+    .suggestions .suggestion-group-wrap {
+      border-top: none;
+    }
+
+    .suggestions li + .suggestion-group-wrap {
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .suggestion-group {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .suggestion-group-label {
+      padding: var(--space-sm) var(--space-lg) var(--space-xs);
+      color: var(--color-text-muted);
+      font: var(--font-size-xs) var(--font-family-mono);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+    }
+
+    .suggestion-group .suggestion-group-label + li {
+      border-top: none;
+    }
+
     .suggestion {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
       color: var(--color-text-subtle);
       cursor: pointer;
       font-family: var(--font-family-display);
@@ -332,13 +363,19 @@ searchTemplate.innerHTML = `
       transition: background var(--duration-normal) var(--ease-out);
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
       outline: 0;
       background: transparent;
       border: none;
       opacity: 0;
       animation: suggestionIn var(--duration-normal) var(--ease-out) forwards;
       touch-action: manipulation;
+    }
+
+    .suggestion-body {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .suggestion:nth-child(1) { animation-delay: calc(var(--duration-fast) / 4); }
@@ -389,6 +426,59 @@ searchTemplate.innerHTML = `
       color: var(--color-text);
       font-weight: var(--font-weight-bold);
     }
+
+    .suggestion-enter {
+      flex-shrink: 0;
+      margin-left: auto;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      font: var(--font-size-xs) var(--font-family-mono);
+      opacity: 0;
+      transition: opacity var(--duration-fast) var(--ease-out);
+    }
+
+    .suggestion:first-child .suggestion-enter,
+    .suggestion:focus-visible .suggestion-enter,
+    .suggestion:focus .suggestion-enter {
+      opacity: 1;
+    }
+
+    .search-panel-footer {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-background);
+    }
+
+    .search-panel-footer:empty {
+      display: none;
+    }
+
+    .footer-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      color: var(--color-text-muted);
+      font: var(--font-size-xs) var(--font-family-display);
+      letter-spacing: var(--letter-spacing-label);
+    }
+
+    .footer-hint kbd {
+      font-family: var(--font-family-mono);
+      color: var(--color-text-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--color-surface);
+    }
+
+    .footer-hint:last-child {
+      margin-left: auto;
+    }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .suggestion { opacity: 1; } }
   </style>
   <dialog class="dialog" aria-label="Search your workspace">
@@ -408,13 +498,18 @@ searchTemplate.innerHTML = `
             aria-label="Search"
             title="search"
             type="text"
-            placeholder="Search"
+            placeholder="Type a command or search…"
           />
           <button type="button" class="clear-btn" aria-label="Clear">×</button>
           <div class="spinner" aria-hidden="true"></div>
         </div>
         <div class="suggestions-wrapper">
           <menu class="suggestions"></menu>
+        </div>
+        <div class="search-panel-footer">
+          <span class="footer-hint"><kbd>↑↓</kbd> navigate</span>
+          <span class="footer-hint"><kbd>↵</kbd> open</span>
+          <span class="footer-hint"><kbd>esc</kbd> close</span>
         </div>
       </div>
     </form>
@@ -424,7 +519,18 @@ searchTemplate.innerHTML = `
 const suggestionTemplate = document.createElement('template');
 suggestionTemplate.innerHTML = `
   <li>
-    <button class="suggestion" type="button"></button>
+    <button class="suggestion" type="button">
+      <span class="suggestion-body"></span>
+      <span class="suggestion-enter" aria-hidden="true">↵</span>
+    </button>
+  </li>
+`;
+
+const groupTemplate = document.createElement('template');
+groupTemplate.innerHTML = `
+  <li class="suggestion-group-wrap">
+    <span class="suggestion-group-label"></span>
+    <ul class="suggestion-group"></ul>
   </li>
 `;
 
@@ -488,7 +594,7 @@ export class Search extends HTMLElement {
     this.#affordance.className = 'search-affordance';
     this.#affordance.setAttribute('aria-label', 'Open search');
     this.#affordance.innerHTML = `
-      <span class="search-affordance-label">Search</span>
+      <span class="search-affordance-label">Type a command or search…</span>
       <span class="search-affordance-hint"><kbd>/</kbd></span>
     `;
 
@@ -862,27 +968,48 @@ export class Search extends HTMLElement {
     this.#clearSuggestions();
     if (suggestions.length === 0) return;
 
+    const commandSuggestions = suggestions.filter((s) => s.type === 'command');
+    const searchSuggestions = suggestions.filter((s) => s.type === 'search');
+
+    const groups = [];
+    if (commandSuggestions.length > 0) {
+      groups.push({ label: 'Commands', items: commandSuggestions });
+    }
+    if (searchSuggestions.length > 0) {
+      groups.push({ label: 'Search', items: searchSuggestions });
+    }
+
     const fragment = document.createDocumentFragment();
 
-    suggestions.forEach((suggestion) => {
-      const clone = suggestionTemplate.content.cloneNode(true);
-      const button = clone.querySelector('.suggestion');
-      button.dataset.type = suggestion.type;
+    for (const group of groups) {
+      const groupClone = groupTemplate.content.cloneNode(true);
+      const label = groupClone.querySelector('.suggestion-group-label');
+      label.textContent = group.label;
+      const groupList = groupClone.querySelector('.suggestion-group');
 
-      if (suggestion.type === 'command') {
-        button.dataset.key = suggestion.key;
-        button.dataset.url = suggestion.url;
-        if (suggestion.searchTemplate) {
-          button.dataset.searchTemplate = suggestion.searchTemplate;
+      group.items.forEach((suggestion) => {
+        const clone = suggestionTemplate.content.cloneNode(true);
+        const button = clone.querySelector('.suggestion');
+        const body = clone.querySelector('.suggestion-body');
+        button.dataset.type = suggestion.type;
+
+        if (suggestion.type === 'command') {
+          button.dataset.key = suggestion.key;
+          button.dataset.url = suggestion.url;
+          if (suggestion.searchTemplate) {
+            button.dataset.searchTemplate = suggestion.searchTemplate;
+          }
+          body.innerHTML = `<span class="key">${suggestion.key}</span> ${this.#highlightMatch(suggestion.name, inputValue)}`;
+        } else {
+          button.dataset.query = suggestion.query;
+          body.textContent = suggestion.query;
         }
-        button.innerHTML = `<span class="key">${suggestion.key}</span> ${this.#highlightMatch(suggestion.name, inputValue)}`;
-      } else {
-        button.dataset.query = suggestion.query;
-        button.textContent = suggestion.query;
-      }
 
-      fragment.appendChild(clone);
-    });
+        groupList.appendChild(clone);
+      });
+
+      fragment.appendChild(groupClone);
+    }
 
     this.#suggestions.appendChild(fragment);
   }

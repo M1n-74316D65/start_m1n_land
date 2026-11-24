@@ -33,10 +33,11 @@ newsTemplate.innerHTML = `
       counter-increment: story;
     }
     .story::before {
-      content: counter(story, decimal-leading-zero);
+      content: counter(story) '.';
       padding-top: var(--space-xs);
       color: var(--color-text-muted);
       font: var(--font-size-xs) var(--font-family-mono);
+      font-variant-numeric: tabular-nums;
     }
     .story-body {
       display: flex;
