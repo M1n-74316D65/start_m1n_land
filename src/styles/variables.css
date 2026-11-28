@@ -9,9 +9,10 @@
   --space-3xl: 4rem;
   --font-size-lg: 1.25rem;
   --font-size-heading: 1.75rem;
-  --font-size-clock: clamp(4.5rem, 13vw, 9rem);
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
+  --font-size-clock: clamp(4rem, 6rem + 2vw, 7rem);
+  --font-size-news: 1.25rem;
+  --radius-sm: 0;
+  --radius-md: 0;
   --radius-lg: 0.75rem;
 
   --space-xs: 0.25rem;
@@ -22,40 +23,43 @@
   --space-2xl: 2.5rem;
   --space: var(--space-md);
 
-  --layout-max: 60rem;
-  --layout-inset-x: clamp(1.25rem, 5vw, 4rem);
+  --layout-max: 80rem;
+  --layout-inset-x: clamp(1rem, 4vw, 3rem);
   --layout-inset-y: var(--space-2xl);
 
-  --color-background: #171916;
-  --color-surface: #22251f;
-  --color-surface-elevated: #2b3027;
-  --color-text-subtle: #b8bfb0;
-  --color-text-muted: #a0a995;
-  --color-text: #f0f1e9;
-  --color-focus: #343d2b;
-  --color-border: #414839;
-  --color-border-subtle: #32382c;
-  --color-accent: #c0d59b;
-  --color-accent-hover: #d6e6bb;
+  --color-background: #0e1114;
+  --color-surface: #1a2229;
+  --color-surface-elevated: #243038;
+  --color-text-subtle: #8a98a4;
+  --color-text-muted: #8a98a4;
+  --color-text: #e8eef2;
+  --color-focus: #1a2229;
+  --color-border: #243038;
+  --color-border-subtle: #1a2229;
+  --color-field: #54656f;
+  --color-accent: #2dd4bf;
+  --color-accent-hover: #70e4d4;
+  --color-danger: #ff7b72;
 
-  --pwa-background-color: #171916;
-  --pwa-theme-color: #171916;
+  --pwa-background-color: #0e1114;
+  --pwa-theme-color: #0e1114;
 
   --font-family-display:
     'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-reading: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-family-mono:
     'IBM Plex Mono', 'SFMono-Regular', Menlo, Monaco, Consolas,
     'Liberation Mono', monospace;
   --font-family: var(--font-family-display);
   --font-size: 16px;
-  --font-size-xs: 0.6875rem;
+  --font-size-xs: 0.75rem;
   --font-size-sm: 0.8125rem;
   --font-size-md: 1rem;
   --font-weight-bold: 500;
   --font-weight-normal: 400;
   --font-weight-display: 400;
   --letter-spacing: -0.015em;
-  --letter-spacing-label: 0.06em;
+  --letter-spacing-label: 0.04em;
   --letter-spacing-display: -0.065em;
 
   --duration-fast: 120ms;
@@ -66,26 +70,26 @@
   --transition-speed-fast: var(--duration-fast);
   --transition-easing: var(--ease-out);
 
-  --shadow-panel: 0 24px 80px color-mix(in srgb, #171916 18%, transparent);
+  --shadow-panel: 0 24px 80px color-mix(in srgb, #0e1114 24%, transparent);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background: #f4f4f1;
-    --color-surface: #eaeae5;
-    --color-surface-elevated: #e1e2db;
-    --color-text-subtle: #4d5148;
-    --color-text-muted: #5a5f54;
-    --color-text: #232520;
-    --color-focus: #dedfd8;
-    --color-border: #d0d1c9;
-    --color-border-subtle: #dedfd8;
-    --color-accent: #465c2e;
-    --color-accent-hover: #30451c;
+    --color-background: #f5f7f8;
+    --color-surface: #e7ecef;
+    --color-surface-elevated: #dde3e8;
+    --color-text-subtle: #5c6a75;
+    --color-text-muted: #5c6a75;
+    --color-text: #12171c;
+    --color-focus: #e7ecef;
+    --color-border: #dde3e8;
+    --color-border-subtle: #e7ecef;
+    --color-field: #7d8a96;
+    --color-accent: #0e6b5c;
+    --color-accent-hover: #095247;
+    --color-danger: #b42318;
 
-    --pwa-background-color: #f4f4f1;
-    --pwa-theme-color: #f4f4f1;
-
-    --shadow-panel: 0 24px 80px color-mix(in srgb, #171916 18%, transparent);
+    --pwa-background-color: #f5f7f8;
+    --pwa-theme-color: #f5f7f8;
   }
 }

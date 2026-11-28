@@ -18,8 +18,8 @@ commandsTemplate.innerHTML = `
     }
     .commands {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: var(--space-sm) var(--space-lg);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-xl);
       list-style: none;
       margin: 0;
       padding: 0;
@@ -34,10 +34,10 @@ commandsTemplate.innerHTML = `
     .command {
       display: flex;
       align-items: center;
-      gap: var(--space-md);
+      gap: var(--space-sm);
       min-height: var(--control-height);
       height: 100%;
-      padding: var(--space-md);
+      padding: var(--space-sm) var(--space-xs);
       box-sizing: border-box;
       text-decoration: none;
       color: var(--color-text);
@@ -46,7 +46,7 @@ commandsTemplate.innerHTML = `
     }
     .command.wide {
       background: var(--color-surface);
-      border-color: transparent;
+      padding-inline: var(--space-md);
     }
     .command:hover,
     .command:active {
@@ -54,7 +54,7 @@ commandsTemplate.innerHTML = `
     }
     .command:focus-visible {
       outline: 2px solid var(--color-accent);
-      outline-offset: 2px;
+      outline-offset: 3px;
       background: var(--color-focus);
     }
     .key {
@@ -65,10 +65,14 @@ commandsTemplate.innerHTML = `
       height: var(--key-size);
       flex-shrink: 0;
       color: var(--color-text-muted);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
       font: var(--font-size-xs) var(--font-family-mono);
       text-transform: uppercase;
+    }
+    .key::before {
+      content: '[';
+    }
+    .key::after {
+      content: ']';
     }
     .name {
       min-width: 0;
@@ -76,33 +80,25 @@ commandsTemplate.innerHTML = `
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: var(--font-size-md);
+      font-size: var(--font-size-sm);
     }
     .command.wide::after {
       content: '↗';
       color: var(--color-accent);
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-md);
     }
     .command:hover .key {
       color: var(--color-accent);
-      border-color: var(--color-accent);
     }
-    @media (max-width: 899px) {
+    @media (max-width: 399px) {
       .commands {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-    @media (max-width: 599px) {
-      .commands {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--space-sm);
+        column-gap: var(--space-md);
       }
       .command {
-        gap: var(--space-sm);
-        padding-inline: var(--space-sm);
+        padding-inline: 0;
       }
-      .name {
-        font-size: var(--font-size-sm);
+      .command.wide {
+        padding-inline: var(--space-sm);
       }
       .command.wide::after {
         display: none;

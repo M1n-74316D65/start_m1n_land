@@ -167,7 +167,6 @@ searchTemplate.innerHTML = `
       color: var(--color-text-subtle);
     }
 
-    /* Per-mode left accent so the commit action reads at a glance (skill §5) */
     .search-mode[data-kind='go'] {
       border-left-color: var(--color-accent);
     }

@@ -31,6 +31,7 @@ export const COMMANDS = new Map([
       workspace: 'personal',
     },
   ],
+  ['D', { name: 'Wire', url: 'https://news.m1n.land/', workspace: 'personal' }],
   [
     'B',
     { name: 'Pastebin', url: 'https://paste.m1n.land/', workspace: 'personal' },

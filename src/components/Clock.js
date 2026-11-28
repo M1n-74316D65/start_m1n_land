@@ -7,9 +7,9 @@ clockTemplate.innerHTML = `
     }
     .clock-container {
       display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--space-xl);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-lg);
     }
     .time {
       font: var(--font-weight-display) var(--font-size-clock)/0.9
@@ -24,59 +24,33 @@ clockTemplate.innerHTML = `
     .meta {
       display: flex;
       flex-direction: column;
-      gap: var(--space-sm);
-      padding-bottom: var(--space-sm);
+      width: 100%;
+      gap: var(--space-xs);
     }
     .meta-row {
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
+      justify-content: space-between;
       gap: var(--space-sm);
     }
     .greeting {
-      width: 100%;
-      font-size: var(--font-size-heading);
-      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-normal);
       letter-spacing: var(--letter-spacing-heading);
-      line-height: 1.15;
+      line-height: 1.3;
     }
     .date {
       color: var(--color-text-subtle);
-      font-size: var(--font-size-md);
+      font-size: var(--font-size-sm);
     }
-    .seconds,
-    .status {
+    .seconds {
       color: var(--color-text-muted);
-      font: var(--font-size-xs) var(--font-family-mono);
-      letter-spacing: var(--letter-spacing-label);
+      font: var(--font-size-xs) var(--font-family-display);
+      font-variant-numeric: tabular-nums;
     }
     .seconds::after {
-      content: ' SEC';
-    }
-    .status::before {
-      content: '· ';
-    }
-    @media (max-width: 599px) {
-      .clock-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-lg);
-      }
-      .meta {
-        width: 100%;
-        padding: 0;
-      }
-      .meta-row {
-        align-items: center;
-      }
-      .greeting {
-        width: auto;
-        flex: 1;
-        font-size: var(--font-size-heading);
-      }
-      .date {
-        font-size: var(--font-size-sm);
-      }
+      content: ' s';
     }
     @media (prefers-reduced-motion: reduce) {
       *,
@@ -92,8 +66,7 @@ clockTemplate.innerHTML = `
     <span class="meta">
       <span class="meta-row">
         <span class="greeting"></span>
-        <span class="seconds">00</span>
-        <span class="status"></span>
+        <span class="seconds" aria-hidden="true">00</span>
       </span>
       <span class="date"></span>
     </span>
@@ -105,10 +78,7 @@ export class Clock extends HTMLElement {
   #time;
   #date;
   #seconds;
-  #status;
   #interval;
-  #boundOnline;
-  #boundOffline;
   #lastHours = -1;
   #lastMinutes = -1;
   #lastSeconds = -1;
@@ -122,28 +92,12 @@ export class Clock extends HTMLElement {
     this.#time = this.shadowRoot.querySelector('.time');
     this.#date = this.shadowRoot.querySelector('.date');
     this.#seconds = this.shadowRoot.querySelector('.seconds');
-    this.#status = this.shadowRoot.querySelector('.status');
-    this.#updateStatus();
     this.#updateClock();
     this.#interval = setInterval(() => this.#updateClock(), 1000);
-    this.#boundOnline = () => this.#updateStatus();
-    this.#boundOffline = () => this.#updateStatus();
-    window.addEventListener('online', this.#boundOnline);
-    window.addEventListener('offline', this.#boundOffline);
   }
 
   disconnectedCallback() {
     if (this.#interval) clearInterval(this.#interval);
-    window.removeEventListener('online', this.#boundOnline);
-    window.removeEventListener('offline', this.#boundOffline);
-  }
-
-  #updateStatus() {
-    if (!this.#status) return;
-    const online = navigator.onLine;
-    this.#status.textContent = online ? 'ONLINE' : 'OFFLINE';
-    /* Offline is owned by the fixed red badge; silence the green readout */
-    this.#status.style.display = online ? '' : 'none';
   }
 
   #updateClock() {
@@ -161,6 +115,7 @@ export class Clock extends HTMLElement {
 
     if (this.#lastHours !== hours || this.#lastMinutes !== minutes) {
       this.#time.innerHTML = timeStr;
+      this.#time.dateTime = now.toISOString();
       this.#greeting.textContent = greeting;
       this.#lastHours = hours;
       this.#lastMinutes = minutes;

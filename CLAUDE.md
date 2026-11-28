@@ -33,8 +33,9 @@ Components. No build process or external dependencies are required.
 - `<commands-component>`: Renders the grid of keyboard shortcuts
 - `<search-component>`: Handles search dialog, input processing, command
   parsing, and DuckDuckGo autocomplete
-- `<news-feed-component>`: Displays Hacker News top stories with 30-minute
-  caching
+- `<newsfeed-component>`: Shows wire's five latest chronological headlines from
+  `https://news.m1n.land/api/feed?limit=5&hours=24`, with loading, empty, error
+  and retry states
 - `service-worker.js`: PWA service worker for offline caching (cache-first
   strategy)
 

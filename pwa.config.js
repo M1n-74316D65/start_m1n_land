@@ -70,7 +70,7 @@ export default {
         handler: 'NetworkOnly',
       },
       {
-        urlPattern: /^https:\/\/hn\.algolia\.com/,
+        urlPattern: /^https:\/\/news\.m1n\.land\/api\//,
         handler: 'NetworkOnly',
       },
     ],
