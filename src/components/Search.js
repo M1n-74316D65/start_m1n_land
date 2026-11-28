@@ -47,7 +47,7 @@ searchTemplate.innerHTML = `
     }
 
     .dialog::backdrop {
-      background: color-mix(in srgb, var(--color-background) 92%, transparent);
+      background: var(--color-scrim);
       opacity: 0;
       transition: opacity var(--duration-normal) var(--ease-out);
     }
@@ -86,60 +86,118 @@ searchTemplate.innerHTML = `
     }
 
     .search-panel {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      background: var(--color-background);
+      border: 1px solid var(--color-field);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-panel);
       overflow: hidden;
     }
 
-    .search-panel-header {
+    .input-container {
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-lg);
       border-bottom: 1px solid var(--color-border);
-      background: var(--color-background);
     }
 
-    .search-panel-label {
-      color: var(--color-text-subtle);
+    .input {
+      color: var(--color-text);
       font-family: var(--font-family-display);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: var(--letter-spacing-label);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-normal);
+      letter-spacing: var(--letter-spacing);
+      padding: var(--space-lg) calc(6 * var(--space-lg)) var(--space-lg) var(--space-lg);
+      min-height: calc(var(--input-height) + var(--space-sm));
+      border-radius: 0;
+      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+      background: transparent;
+      border: none;
+    }
+
+    .input:focus {
+      outline: none;
+    }
+
+    .input::placeholder {
+      color: var(--color-text-muted);
       text-transform: none;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      letter-spacing: var(--letter-spacing);
+      font-size: var(--font-size-md);
+    }
+
+    .input-trailing {
+      position: absolute;
+      right: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
     }
 
     .search-workspace {
-      color: var(--color-text);
-      font-weight: var(--font-weight-bold);
-      margin-left: var(--space-sm);
-    }
-
-    .search-panel-hint {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-xs);
       color: var(--color-text-muted);
-      font-family: var(--font-family-display);
-      font-size: var(--font-size-xs);
+      font: var(--font-size-xs) var(--font-family-mono);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: none;
-      flex-shrink: 0;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      white-space: nowrap;
+      user-select: none;
     }
 
-    .search-panel-hint kbd {
-      font-family: inherit;
-      color: var(--color-text-subtle);
+    .clear-btn {
+      width: var(--key-size);
+      height: var(--key-size);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition:
+        background var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
+    }
+
+    .clear-btn[visible] {
+      display: flex;
+    }
+
+    .clear-btn:hover {
+      background: var(--color-focus);
+      color: var(--color-text);
+      border-color: var(--color-border);
+    }
+
+    .clear-btn:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+      color: var(--color-text);
+    }
+
+    .spinner {
+      display: none;
+      width: var(--space-lg);
+      height: var(--space-lg);
+      border-radius: 50%;
       border: 1px solid var(--color-border);
-      padding: var(--space-xs) var(--space-sm);
-      background: var(--color-surface);
+      border-top-color: var(--color-accent);
+      border-right-color: var(--color-accent);
+      pointer-events: none;
+    }
+
+    .spinner[visible] {
+      display: block;
+      animation: spin calc(3 * var(--duration-slow)) linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .search-mode[data-kind="idle"] { display: none; }
@@ -149,34 +207,20 @@ searchTemplate.innerHTML = `
       align-items: center;
       gap: var(--space-sm);
       padding: var(--space-sm) var(--space-lg);
-      border-bottom: 1px solid var(--color-border-subtle);
-      border-left: 2px solid var(--color-border-subtle);
+      border-bottom: 1px solid var(--color-border);
+      border-left: 2px solid var(--color-accent);
+      background: var(--color-surface);
       font-family: var(--font-family-display);
       font-size: var(--font-size-xs);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: none;
-      color: var(--color-text-muted);
+      letter-spacing: var(--letter-spacing);
+      color: var(--color-text-subtle);
       min-height: var(--key-size);
       box-sizing: border-box;
-      transition: border-left-color var(--duration-fast) var(--ease-out);
-    }
-
-    .search-mode[data-kind='go'],
-    .search-mode[data-kind='search-cmd'],
-    .search-mode[data-kind='path'] {
-      color: var(--color-text-subtle);
-    }
-
-    .search-mode[data-kind='go'] {
-      border-left-color: var(--color-accent);
-    }
-
-    .search-mode[data-kind='go'] .search-mode-kind {
-      color: var(--color-text);
     }
 
     .search-mode-kind {
       color: var(--color-accent);
+      font-family: var(--font-family-mono);
       font-weight: var(--font-weight-bold);
       flex-shrink: 0;
     }
@@ -193,111 +237,7 @@ searchTemplate.innerHTML = `
       color: var(--color-text);
     }
 
-    .input-container {
-      position: relative;
-      padding: var(--space-lg);
-    }
-
-    .input {
-      color: var(--color-text);
-      font-family: var(--font-family-display);
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-normal);
-      letter-spacing: var(--letter-spacing);
-      padding: var(--space-md) calc(3 * var(--space-lg)) var(--space-md) var(--space-lg);
-      min-height: var(--input-height);
-      border-radius: var(--radius-sm);
-      text-align: left;
-      width: 100%;
-      box-sizing: border-box;
-      background: var(--color-background);
-      border: none;
-      box-shadow: inset 0 0 0 1px var(--color-border);
-      transition:
-        box-shadow var(--duration-normal) var(--ease-out),
-        background var(--duration-normal) var(--ease-out);
-    }
-
-    .input:focus {
-      background: var(--color-focus);
-      box-shadow: inset 0 0 0 1px var(--color-accent);
-      outline: none;
-    }
-
-    .input::placeholder {
-      color: var(--color-text-muted);
-      text-transform: none;
-      letter-spacing: var(--letter-spacing-label);
-      font-size: var(--font-size-md);
-    }
-
-    .clear-btn {
-      position: absolute;
-      right: calc(var(--space-lg) + var(--space-sm));
-      top: 50%;
-      transform: translateY(-50%);
-      width: var(--control-min-height);
-      height: var(--control-min-height);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-muted);
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition:
-        opacity var(--duration-fast) var(--ease-out),
-        background var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out),
-        border-color var(--duration-fast) var(--ease-out);
-    }
-
-    .clear-btn[visible] {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .clear-btn:hover {
-      background: var(--color-focus);
-      color: var(--color-text);
-      border-color: var(--color-border);
-    }
-
-    .clear-btn:focus-visible {
-      outline: none;
-      box-shadow: inset 0 0 0 1px var(--color-accent);
-      color: var(--color-text);
-    }
-
-    .spinner {
-      position: absolute;
-      right: calc(var(--space-lg) + var(--space-sm));
-      top: 50%;
-      transform: translateY(-50%);
-      width: var(--space-lg);
-      height: var(--space-lg);
-      border-radius: 50%;
-      border: 1px solid var(--color-border);
-      border-top-color: var(--color-accent);
-      border-right-color: var(--color-accent);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--duration-fast) var(--ease-out);
-    }
-
-    .spinner[visible] {
-      opacity: 1;
-      animation: spin calc(3 * var(--duration-slow)) linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: translateY(-50%) rotate(360deg); }
-    }
-
     .suggestions-wrapper {
-      border-top: 1px solid var(--color-border);
       min-height: 0;
     }
 
@@ -404,9 +344,10 @@ searchTemplate.innerHTML = `
     .suggestion .key {
       display: inline-block;
       color: var(--color-text-subtle);
+      font: var(--font-size-xs) var(--font-family-mono);
       font-weight: var(--font-weight-bold);
       letter-spacing: var(--letter-spacing-label);
-      text-transform: none;
+      text-transform: uppercase;
       min-width: var(--key-size);
       margin-right: var(--space-sm);
     }
@@ -483,14 +424,6 @@ searchTemplate.innerHTML = `
   <dialog class="dialog" aria-label="Search your workspace">
     <form autocomplete="off" class="form" method="dialog" spellcheck="false">
       <div class="search-panel">
-        <div class="search-panel-header">
-          <span class="search-panel-label">Search <span class="search-workspace"></span></span>
-          <span class="search-panel-hint"><kbd>esc</kbd></span>
-        </div>
-        <div class="search-mode" data-kind="idle" aria-live="polite">
-          <span class="search-mode-kind"></span>
-          <span class="search-mode-detail"></span>
-        </div>
         <div class="input-container">
           <input
             class="input"
@@ -499,10 +432,17 @@ searchTemplate.innerHTML = `
             type="text"
             placeholder="Type a command or search…"
           />
-          <button type="button" class="clear-btn" aria-label="Clear">×</button>
-          <div class="spinner" aria-hidden="true"></div>
+          <div class="input-trailing">
+            <button type="button" class="clear-btn" aria-label="Clear">×</button>
+            <div class="spinner" aria-hidden="true"></div>
+            <span class="search-workspace"></span>
+          </div>
         </div>
-        <div class="suggestions-wrapper">
+        <div class="search-mode" data-kind="idle" aria-live="polite">
+          <span class="search-mode-kind"></span>
+          <span class="search-mode-detail"></span>
+        </div>
+        <div class="suggestions-wrapper" aria-busy="false">
           <menu class="suggestions"></menu>
         </div>
         <div class="search-panel-footer">
@@ -541,6 +481,7 @@ export class Search extends HTMLElement {
   #form;
   #input;
   #suggestions;
+  #suggestionsWrapper;
   #clearBtn;
   #spinner;
   #workspaceLabel;
@@ -550,6 +491,8 @@ export class Search extends HTMLElement {
   #activeWorkspaceId;
   #previousFocus;
   #isLoading = false;
+  #fetchSeq = 0;
+  #fetchAbort;
   #affordance;
   #affordanceHost;
   #boundAffordanceClick;
@@ -563,6 +506,9 @@ export class Search extends HTMLElement {
     this.#form = this.shadowRoot.querySelector('.form');
     this.#input = this.shadowRoot.querySelector('.input');
     this.#suggestions = this.shadowRoot.querySelector('.suggestions');
+    this.#suggestionsWrapper = this.shadowRoot.querySelector(
+      '.suggestions-wrapper'
+    );
     this.#clearBtn = this.shadowRoot.querySelector('.clear-btn');
     this.#spinner = this.shadowRoot.querySelector('.spinner');
     this.#workspaceLabel = this.shadowRoot.querySelector('.search-workspace');
@@ -631,6 +577,8 @@ export class Search extends HTMLElement {
     this.#input.addEventListener('keydown', (e) => this.#handleKeyDown(e));
 
     this.#clearBtn.addEventListener('click', () => {
+      this.#fetchAbort?.abort();
+      this.#setLoading(false);
       this.#input.value = '';
       this.#input.focus();
       this.#clearSuggestions();
@@ -656,7 +604,7 @@ export class Search extends HTMLElement {
 
   #updateWorkspaceLabel() {
     const workspace = workspaceManager.activeWorkspace;
-    this.#workspaceLabel.textContent = workspace ? `// ${workspace.name}` : '';
+    this.#workspaceLabel.textContent = workspace ? workspace.name : '';
   }
 
   #normalizeKey(key) {
@@ -687,8 +635,8 @@ export class Search extends HTMLElement {
       if (command?.searchTemplate && query) {
         return {
           kind: 'search-cmd',
-          label: 'SEARCH',
-          detail: `${command.name.toUpperCase()} · ${query}`,
+          label: 'Search',
+          detail: `${command.name} · ${query}`,
         };
       }
     }
@@ -701,8 +649,8 @@ export class Search extends HTMLElement {
       if (command?.url && path) {
         return {
           kind: 'path',
-          label: 'PATH',
-          detail: `${command.name.toUpperCase()} / ${path}`,
+          label: 'Path',
+          detail: `${command.name} / ${path}`,
         };
       }
     }
@@ -711,22 +659,22 @@ export class Search extends HTMLElement {
     if (directCommand) {
       return {
         kind: 'go',
-        label: 'GO',
-        detail: directCommand.name.toUpperCase(),
+        label: 'Go',
+        detail: directCommand.name,
       };
     }
 
     if (this.#isUrl(value)) {
       return {
         kind: 'url',
-        label: 'OPEN',
+        label: 'Open',
         detail: value.startsWith('http') ? value : `https://${value}`,
       };
     }
 
     return {
       kind: 'search',
-      label: 'SEARCH',
+      label: 'Search',
       detail: value,
     };
   }
@@ -794,6 +742,8 @@ export class Search extends HTMLElement {
 
   #close() {
     if (!this.#dialog.open) return;
+    this.#fetchAbort?.abort();
+    this.#setLoading(false);
     this.#dialog.close();
   }
 
@@ -870,10 +820,17 @@ export class Search extends HTMLElement {
   #setLoading(isLoading) {
     this.#isLoading = isLoading;
     this.#spinner.toggleAttribute('visible', isLoading);
+    this.#suggestionsWrapper.setAttribute(
+      'aria-busy',
+      isLoading ? 'true' : 'false'
+    );
     this.#updateClearButton();
   }
 
   async #fetchSuggestions(value) {
+    const seq = ++this.#fetchSeq;
+    this.#fetchAbort?.abort();
+
     const workspaceCommands = this.#workspaceCommands();
     const matchingCommands = this.#findMatchingCommands(
       value,
@@ -884,17 +841,29 @@ export class Search extends HTMLElement {
       CONFIG.suggestionLimit
     );
 
+    // Render local command matches immediately without waiting on autocomplete
+    this.#renderSuggestions(commandSuggestions, value);
+
+    const remaining = Math.max(
+      0,
+      CONFIG.suggestionLimit - commandSuggestions.length
+    );
     const query = this.#extractQuery(value);
-    const searchSuggestions = query
-      ? await this.#fetchDuckDuckGoSuggestions(query)
-      : [];
+    if (!query || remaining === 0) {
+      this.#setLoading(false);
+      return;
+    }
+
+    this.#fetchAbort = new AbortController();
+    const searchSuggestions = await this.#fetchDuckDuckGoSuggestions(
+      query,
+      this.#fetchAbort.signal
+    );
+    if (seq !== this.#fetchSeq) return;
 
     const allSuggestions = [
       ...commandSuggestions,
-      ...searchSuggestions.slice(
-        0,
-        Math.max(0, CONFIG.suggestionLimit - commandSuggestions.length)
-      ),
+      ...searchSuggestions.slice(0, remaining),
     ];
 
     this.#renderSuggestions(allSuggestions, value);
@@ -941,13 +910,14 @@ export class Search extends HTMLElement {
     return value.slice(delimiterIndex + 1).trim();
   }
 
-  async #fetchDuckDuckGoSuggestions(query) {
+  async #fetchDuckDuckGoSuggestions(query, signal) {
     if (!query) return [];
 
     try {
       this.#setLoading(true);
       const response = await fetch(
-        `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`
+        `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`,
+        { signal }
       );
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
@@ -956,6 +926,7 @@ export class Search extends HTMLElement {
         query: suggestion,
       }));
     } catch (error) {
+      if (error.name === 'AbortError') return [];
       console.warn('Failed to fetch suggestions:', error);
       return [];
     } finally {

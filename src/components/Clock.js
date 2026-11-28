@@ -46,7 +46,7 @@ clockTemplate.innerHTML = `
     }
     .seconds {
       color: var(--color-text-muted);
-      font: var(--font-size-xs) var(--font-family-display);
+      font: var(--font-size-xs) var(--font-family-mono);
       font-variant-numeric: tabular-nums;
     }
     .seconds::after {

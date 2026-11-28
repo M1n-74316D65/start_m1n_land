@@ -20,22 +20,32 @@ tabsTemplate.innerHTML = `
       min-height: var(--control-min-height);
       padding: var(--space-sm) var(--space-md);
       border: 0;
+      border-bottom: 2px solid transparent;
       border-radius: var(--radius-sm);
       background: transparent;
       color: var(--color-text-subtle);
       font: inherit;
       font-size: var(--font-size-sm);
       cursor: pointer;
+      transition:
+        background var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
     }
     .tab:hover,
     .tab:active {
-      background: var(--color-focus);
+      background: color-mix(in srgb, var(--color-surface) 50%, transparent);
       color: var(--color-text);
     }
-    .tab.active {
+    .tab.active,
+    .tab.active:hover {
       color: var(--color-text);
       background: var(--color-surface);
+      border-bottom-color: var(--color-accent);
       font-weight: var(--font-weight-bold);
+    }
+    .tab.active .tab-key {
+      color: var(--color-accent);
     }
     .tab:focus-visible {
       outline: 2px solid var(--color-accent);

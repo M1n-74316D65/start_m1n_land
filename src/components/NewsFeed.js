@@ -78,7 +78,7 @@ newsTemplate.innerHTML = `
     }
     .news-window {
       color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
+      font: var(--font-size-xs) var(--font-family-mono);
       font-variant-numeric: tabular-nums;
     }
     .stories {
@@ -90,7 +90,7 @@ newsTemplate.innerHTML = `
     .story {
       min-width: 0;
       padding: var(--space-lg) 0;
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border-subtle);
     }
     .story-top {
       display: flex;
@@ -136,6 +136,7 @@ newsTemplate.innerHTML = `
       text-decoration: none;
       text-wrap: pretty;
       overflow-wrap: break-word;
+      transition: color var(--duration-fast) var(--ease-out);
     }
     .title:visited {
       color: var(--color-text-muted);
@@ -150,16 +151,22 @@ newsTemplate.innerHTML = `
       align-items: center;
       gap: var(--space-sm);
       color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
+      font: var(--font-size-xs) var(--font-family-mono);
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
     .meta a {
       display: inline-flex;
       align-items: center;
+      gap: var(--space-sm);
       min-height: 1.5rem;
-      color: inherit;
+      color: var(--color-text-subtle);
       text-decoration: none;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .meta a::before {
+      content: '·';
+      color: var(--color-field);
     }
     .meta a:hover {
       color: var(--color-accent);
@@ -199,6 +206,16 @@ newsTemplate.innerHTML = `
     .loading-title {
       display: block;
       background: var(--color-surface);
+      animation: skeletonPulse 1.8s var(--ease-out) infinite;
+    }
+    @keyframes skeletonPulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
     }
     .loading-source {
       width: 7rem;
@@ -233,16 +250,21 @@ newsTemplate.innerHTML = `
       min-height: var(--control-min-height);
       margin-top: var(--space-lg);
       padding: var(--space-sm) var(--space-lg);
-      border: 1px solid var(--color-text);
+      border: 1px solid var(--color-field);
       border-radius: var(--radius-sm);
       background: transparent;
       color: var(--color-text);
       font: 500 var(--font-size-sm) var(--font-family-display);
       cursor: pointer;
+      transition:
+        background var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out);
     }
     .retry:hover {
-      background: var(--color-text);
-      color: var(--color-background);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-accent-foreground);
     }
     @media (pointer: coarse) {
       .source,

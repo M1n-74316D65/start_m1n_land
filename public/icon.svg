@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="M1n">
-  <rect width="512" height="512" rx="96" fill="#0d0e0e"/>
+  <rect width="512" height="512" rx="96" fill="#171916"/>
   <rect
     x="32"
     y="32"
@@ -7,7 +7,7 @@
     height="448"
     rx="80"
     fill="none"
-    stroke="#1a1d1d"
+    stroke="#414839"
     stroke-width="6"
   />
   <line
@@ -15,7 +15,7 @@
     y1="368"
     x2="324"
     y2="144"
-    stroke="#7cba5f"
+    stroke="#c0d59b"
     stroke-width="52"
     stroke-linecap="round"
   />

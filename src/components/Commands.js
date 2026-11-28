@@ -15,15 +15,21 @@ commandsTemplate.innerHTML = `
     .commands-shell {
       width: 100%;
       min-width: 0;
+      container-type: inline-size;
     }
     .commands {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: var(--space-xl);
+      column-gap: var(--space-lg);
       list-style: none;
       margin: 0;
       padding: 0;
       transition: opacity var(--duration-normal) var(--ease-out);
+    }
+    @container (min-width: 30rem) {
+      .commands {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
     .commands > li {
       min-width: 0;
@@ -35,22 +41,27 @@ commandsTemplate.innerHTML = `
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      min-height: var(--control-height);
+      min-height: var(--control-min-height);
       height: 100%;
-      padding: var(--space-sm) var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
       box-sizing: border-box;
       text-decoration: none;
       color: var(--color-text);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border-subtle);
       border-radius: var(--radius-sm);
+      transition:
+        background var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out);
     }
     .command.wide {
       background: var(--color-surface);
-      padding-inline: var(--space-md);
+      box-shadow: inset 2px 0 0 var(--color-accent);
+      padding-inline: var(--space-sm);
     }
     .command:hover,
     .command:active {
       background: var(--color-focus);
+      border-bottom-color: var(--color-field);
     }
     .command:focus-visible {
       outline: 2px solid var(--color-accent);
@@ -67,6 +78,7 @@ commandsTemplate.innerHTML = `
       color: var(--color-text-muted);
       font: var(--font-size-xs) var(--font-family-mono);
       text-transform: uppercase;
+      transition: color var(--duration-fast) var(--ease-out);
     }
     .key::before {
       content: '[';
