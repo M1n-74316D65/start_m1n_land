@@ -12,26 +12,17 @@ export const CONFIG = {
 export const COMMANDS = new Map([
   // Personal (alphabetical by name)
   [
+    'C',
+    {
+      name: 'Gemini',
+      url: 'https://gemini.google.com/',
+      workspace: 'personal',
+    },
+  ],
+  [
     'G',
     { name: 'Gmail', url: 'https://mail.google.com/', workspace: 'personal' },
   ],
-  [
-    'C',
-    {
-      name: 'Mistral',
-      url: 'https://chat.mistral.ai/work',
-      workspace: 'personal',
-    },
-  ],
-  [
-    'M',
-    {
-      name: 'MyMemo',
-      url: 'https://app.mymemo.ai/',
-      workspace: 'personal',
-    },
-  ],
-  ['D', { name: 'Wire', url: 'https://news.m1n.land/', workspace: 'personal' }],
   [
     'B',
     { name: 'Pastebin', url: 'https://paste.m1n.land/', workspace: 'personal' },
@@ -41,6 +32,14 @@ export const COMMANDS = new Map([
     { name: 'RSS feed', url: 'https://owl.report/', workspace: 'personal' },
   ],
   [
+    'M',
+    {
+      name: 'Stacks',
+      url: 'https://app.betterstacks.com/',
+      workspace: 'personal',
+    },
+  ],
+  [
     'T',
     { name: 'Twitch', url: 'https://www.twitch.tv', workspace: 'personal' },
   ],
@@ -48,6 +47,7 @@ export const COMMANDS = new Map([
     'W',
     { name: 'Weather', url: 'https://merrysky.net/', workspace: 'personal' },
   ],
+  ['N', { name: 'Wire', url: 'https://news.m1n.land/', workspace: 'personal' }],
   [
     'Y',
     {
@@ -67,9 +67,8 @@ export const COMMANDS = new Map([
     },
   ],
   ['H', { name: 'GitHub', url: 'https://github.com', workspace: 'dev' }],
-  ['N', { name: 'Neon', url: 'https://neon.tech', workspace: 'dev' }],
+  ['S', { name: 'Neon', url: 'https://neon.tech', workspace: 'dev' }],
   ['I', { name: 'Pico', url: 'https://pico.sh', workspace: 'dev' }],
-  ['S', { name: 'Server', url: 'http://192.168.1.139', workspace: 'dev' }],
   [
     'V',
     { name: 'Vercel', url: 'https://vercel.com/dashboard', workspace: 'dev' },
